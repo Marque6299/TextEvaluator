@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Cleaner & Structurer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .input-section, .output-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .input-textarea {
+            width: 100%;
+            height: 300px;
+            padding: 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .input-textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #495057;
+            border: 2px solid #e1e5e9;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            color: white;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(86, 171, 47, 0.3);
+        }
+
+        .output-container {
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 400px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: rgba(79, 172, 254, 0.05);
+        }
+
+        .survey-yes {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .survey-no {
+            color: #dc3545;
+        }
+
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .status.success {
+            background: rgba(40, 167, 69, 0.1);
+            color: #155724;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+
+        .status.error {
+            background: rgba(220, 53, 69, 0.1);
+            color: #721c24;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #4facfe;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .filter-info {
+            background: rgba(79, 172, 254, 0.1);
+            color: #0c63e4;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 14px;
+            border: 1px solid rgba(79, 172, 254, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Data Cleaner & Structurer</h1>
+            <p>Transform messy data into clean, structured tables (First Line Department Only)</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2 class="section-title">Raw Data Input</h2>
+                <textarea 
+                    id="rawData" 
+                    class="input-textarea" 
+                    placeholder="Paste your unstructured data here...&#10;&#10;Example:&#10;181-11104 2025-01-20 11:57 N/A Pending Provider Booking Started Email sent to alexander@eksteds.com Reply type: No-reply&#10;33 more lines&#10;564-75269 2025-01-21 14:22 First Line CANCEL 1: Ask about cxnl rules / 1: Cxnl reservation"
+                ></textarea>
+                
+                <div class="controls">
+                    <button id="cleanData" class="btn btn-primary">
+                        🔄 Clean & Structure Data
+                    </button>
+                    <button id="clearInput" class="btn btn-secondary">
+                        🗑️ Clear Input
+                    </button>
+                    <button id="sampleData" class="btn btn-secondary">
+                        📋 Load Sample
+                    </button>
+                </div>
+
+                <div id="inputStatus"></div>
+            </div>
+
+            <div class="output-section">
+                <h2 class="section-title">Structured Output</h2>
+                
+                <div class="filter-info">
+                    ℹ️ Showing only records from "First Line" department with 72-hour survey logic
+                </div>
+
+                <div class="stats" id="stats" style="display: none;">
+                    <div class="stat-card">
+                        <div class="stat-number" id="recordCount">0</div>
+                        <div class="stat-label">First Line Records</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="columnCount">3</div>
+                        <div class="stat-label">Columns</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="surveyCount">0</div>
+                        <div class="stat-label">Potential Surveys</div>
+                    </div>
+                </div>
+
+                <div class="output-container">
+                    <div class="table-wrapper">
+                        <table id="outputTable" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Created</th>
+                                    <th>Department</th>
+                                    <th>Potential Survey</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            </tbody>
+                        </table>
+                        <div id="emptyState" class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                            <h3>No data to display</h3>
+                            <p>Paste your raw data and click "Clean & Structure Data" to get started</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="exportCSV" class="btn btn-export" style="display: none;">
+                        💾 Export as CSV
+                    </button>
+                    <button id="exportJSON" class="btn btn-export" style="display: none;">
+                        📄 Export as JSON
+                    </button>
+                </div>
+
+                <div id="outputStatus"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cleanedData = [];
+        let filteredData = [];
+
+        function showStatus(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="status ${type}">${message}</div>`;
+            setTimeout(() => {
+                element.innerHTML = '';
+            }, 5000);
+        }
+
+        function parseDataLine(line) {
+            // Remove extra whitespace and normalize
+            line = line.trim().replace(/\s+/g, ' ');
+            
+            if (!line) return null;
+
+            // Extract reference number (pattern: XXX-XXXXX or similar)
+            const refMatch = line.match(/^(\d{3}-\d{5,8})/);
+            const reference = refMatch ? refMatch[1] : '';
+            
+            // Extract date and time (pattern: YYYY-MM-DD HH:MM)
+            const dateMatch = line.match(/(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})/);
+            const created = dateMatch ? dateMatch[1] : '';
+            
+            // Common department patterns
+            const departments = ['First Line', 'Second Line', 'N/A', 'System Internal'];
+            let department = 'N/A';
+            for (const dept of departments) {
+                if (line.includes(dept)) {
+                    department = dept;
+                    break;
+                }
+            }
+            
+            // Extract title - common patterns
+            let title = '';
+            const titlePatterns = [
+                /(?:CANCEL|Pending Provider Booking Started|CXL Conf Cancellation Guarantee|Backend BOM|Chat.*?refund)/i
+            ];
+            
+            for (const pattern of titlePatterns) {
+                const match = line.match(pattern);
+                if (match) {
+                    title = match[0];
+                    break;
+                }
+            }
+            
+            // If no specific title found, try to extract meaningful part
+            if (!title) {
+                const parts = line.split(/\s+/);
+                // Look for capitalized words that might be titles
+                for (let i = 0; i < parts.length; i++) {
+                    if (parts[i] && parts[i][0] === parts[i][0].toUpperCase() && parts[i].length > 2) {
+                        if (!reference.includes(parts[i]) && !created.includes(parts[i]) && !department.includes(parts[i])) {
+                            title = parts[i];
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // Everything else goes to note
+            let note = line;
+            // Remove the parts we've extracted
+            if (reference) note = note.replace(reference, '').trim();
+            if (created) note = note.replace(created, '').trim();
+            if (department && department !== 'N/A') note = note.replace(department, '').trim();
+            if (title) note = note.replace(title, '').trim();
+            
+            // Clean up note
+            note = note.replace(/^\s*[-:]\s*/, '').trim();
+            
+            return {
+                reference: reference || generateReference(),
+                created: created || new Date().toISOString().slice(0, 16).replace('T', ' '),
+                department: department,
+                title: title || 'Unknown',
+                note: note || 'No additional information'
+            };
+        }
+
+        function generateReference() {
+            return Math.floor(Math.random() * 900 + 100) + '-' + Math.floor(Math.random() * 90000 + 10000);
+        }
+
+        function calculatePotentialSurvey(data) {
+            if (data.length === 0) return data;
+            
+            // Sort data by created date to ensure chronological order
+            const sortedData = [...data].sort((a, b) => new Date(a.created) - new Date(b.created));
+            
+            // Set first row as "Yes"
+            sortedData[0].potentialSurvey = 'Yes';
+            let lastYesDate = new Date(sortedData[0].created);
+            
+            // Process remaining rows
+            for (let i = 1; i < sortedData.length; i++) {
+                const currentDate = new Date(sortedData[i].created);
+                const timeDifferenceHours = (currentDate - lastYesDate) / (1000 * 60 * 60); // Convert to hours
+                
+                if (timeDifferenceHours >= 72) {
+                    sortedData[i].potentialSurvey = 'Yes';
+                    lastYesDate = currentDate; // Update the reference date
+                } else {
+                    sortedData[i].potentialSurvey = 'No';
+                }
+            }
+            
+            return sortedData;
+        }
+
+        function cleanData() {
+            const rawData = document.getElementById('rawData').value.trim();
+            
+            if (!rawData) {
+                showStatus('inputStatus', '⚠️ Please enter some data to clean', 'error');
+                return;
+            }
+
+            try {
+                const lines = rawData.split('\n').filter(line => line.trim());
+                cleanedData = [];
+
+                for (const line of lines) {
+                    const parsed = parseDataLine(line);
+                    if (parsed) {
+                        cleanedData.push(parsed);
+                    }
+                }
+
+                // Filter to only show "First Line" department records
+                filteredData = cleanedData.filter(record => record.department === 'First Line');
+                
+                // Apply potential survey logic to filtered data
+                if (filteredData.length > 0) {
+                    filteredData = calculatePotentialSurvey(filteredData);
+                }
+
+                if (filteredData.length > 0) {
+                    displayCleanedData();
+                    const totalRecords = cleanedData.length;
+                    const firstLineRecords = filteredData.length;
+                    showStatus('inputStatus', `✅ Successfully processed ${totalRecords} records, showing ${firstLineRecords} "First Line" records`, 'success');
+                } else {
+                    const totalRecords = cleanedData.length;
+                    if (totalRecords > 0) {
+                        showStatus('inputStatus', `⚠️ Processed ${totalRecords} records but found no "First Line" department records to display`, 'error');
+                        // Still show empty state
+                        hideTable();
+                    } else {
+                        showStatus('inputStatus', '⚠️ No valid data found to process', 'error');
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error cleaning data:', error);
+                showStatus('inputStatus', '❌ Error processing data: ' + error.message, 'error');
+            }
+        }
+
+        function displayCleanedData() {
+            const tableBody = document.getElementById('tableBody');
+            const outputTable = document.getElementById('outputTable');
+            const emptyState = document.getElementById('emptyState');
+            const exportButtons = document.querySelectorAll('.btn-export');
+            const stats = document.getElementById('stats');
+            
+            // Clear existing data
+            tableBody.innerHTML = '';
+            
+            // Add rows - showing Created, Department, and Potential Survey columns
+            filteredData.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${escapeHtml(row.created)}</td>
+                    <td>${escapeHtml(row.department)}</td>
+                    <td><span class="survey-${row.potentialSurvey.toLowerCase()}">${escapeHtml(row.potentialSurvey)}</span></td>
+                `;
+                tableBody.appendChild(tr);
+            });
+            
+            // Show table and hide empty state
+            outputTable.style.display = 'table';
+            emptyState.style.display = 'none';
+            
+            // Show export buttons
+            exportButtons.forEach(btn => btn.style.display = 'inline-flex');
+            
+            // Update stats
+            const surveyYesCount = filteredData.filter(row => row.potentialSurvey === 'Yes').length;
+            document.getElementById('recordCount').textContent = filteredData.length;
+            document.getElementById('surveyCount').textContent = surveyYesCount;
+            stats.style.display = 'grid';
+        }
+
+        function hideTable() {
+            const outputTable = document.getElementById('outputTable');
+            const emptyState = document.getElementById('emptyState');
+            const exportButtons = document.querySelectorAll('.btn-export');
+            const stats = document.getElementById('stats');
+            
+            outputTable.style.display = 'none';
+            emptyState.style.display = 'block';
+            exportButtons.forEach(btn => btn.style.display = 'none');
+            stats.style.display = 'none';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function exportCSV() {
+            if (filteredData.length === 0) return;
+            
+            const headers = ['Created', 'Department', 'Potential Survey'];
+            let csv = headers.join(',') + '\n';
+            
+            filteredData.forEach(row => {
+                const csvRow = [
+                    `"${row.created}"`,
+                    `"${row.department}"`,
+                    `"${row.potentialSurvey}"`
+                ];
+                csv += csvRow.join(',') + '\n';
+            });
+            
+            downloadFile(csv, 'first_line_data.csv', 'text/csv');
+            showStatus('outputStatus', '✅ CSV file downloaded successfully', 'success');
+        }
+
+        function exportJSON() {
+            if (filteredData.length === 0) return;
+            
+            // Only export the columns we're displaying
+            const exportData = filteredData.map(row => ({
+                created: row.created,
+                department: row.department,
+                potentialSurvey: row.potentialSurvey
+            }));
+            
+            const json = JSON.stringify(exportData, null, 2);
+            downloadFile(json, 'first_line_data.json', 'application/json');
+            showStatus('outputStatus', '✅ JSON file downloaded successfully', 'success');
+        }
+
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function loadSampleData() {
+            const sampleData = `181-11104 2025-01-20 11:57 N/A Pending Provider Booking Started Email sent to alexander@eksteds.com Reply type: No-reply
+33 more lines
+564-75269 2025-01-21 14:22 First Line CANCEL 1: Ask about cxnl rules / 1: Cxnl reservation
+19: Chat / 2: Cancellation / refund The order has been canceled: Cancellation Guarantee Reason: Cancellation Guarantee
+28 more lines
+181-11113 2025-01-21 14:23 First Line CXL Conf Cancellation Guarantee 51.A Email sent to alexander@eksteds.com Reply type: No-reply
+23 more lines
+564-75404 2025-01-23 15:40 Second Line 3: Backend / 34: Backend BOM 8: Vol rfd / 4: Already handled
+As per YY Policy refund can be claimed only after departure hence LTD label added
+564-75849 2025-01-31 03:17 First Line 19: Chat / 2: Cancellation / refund 2: Already cxnl / 6: Other
+https://apps.mypurecloud.de/directory/#/engage/admin/interactions/c1fe6bb1-8f12-4d05-8d1e-9694d404eb29 Viktor Alexander Ekstedt pax asking regar`;
+            
+            document.getElementById('rawData').value = sampleData;
+            showStatus('inputStatus', '📋 Sample data loaded successfully', 'success');
+        }
+
+        function clearInput() {
+            document.getElementById('rawData').value = '';
+            showStatus('inputStatus', '🗑️ Input cleared', 'success');
+        }
+
+        // Event listeners
+        document.getElementById('cleanData').addEventListener('click', cleanData);
+        document.getElementById('clearInput').addEventListener('click', clearInput);
+        document.getElementById('sampleData').addEventListener('click', loadSampleData);
+        document.getElementById('exportCSV').addEventListener('click', exportCSV);
+        document.getElementById('exportJSON').addEventListener('click', exportJSON);
+
+        // Allow Enter key to trigger cleaning
+        document.getElementById('rawData').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                cleanData();
+            }
+        });
+    </script>
+</body>
+</html>
