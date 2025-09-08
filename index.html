@@ -197,6 +197,11 @@
             color: #dc3545;
         }
 
+        .current-conversation {
+            background: rgba(255, 193, 7, 0.1);
+            font-weight: 500;
+        }
+
         .status {
             padding: 15px;
             margin: 15px 0;
@@ -285,13 +290,24 @@
             font-size: 14px;
             border: 1px solid rgba(79, 172, 254, 0.2);
         }
+
+        .format-indicator {
+            background: rgba(138, 43, 226, 0.1);
+            color: #663399;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 5px 0;
+            font-size: 12px;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>📊 FTP ID - INATOR!!!</h1>
-            <p>Transform messy data into clean, structured tables (First Line Department Only)</p>
+            <p>Transform messy data into clean, structured tables (Auto-detects format - First Line Department Only + Current Conversation)</p>
         </div>
 
         <div class="main-content">
@@ -300,7 +316,7 @@
                 <textarea 
                     id="rawData" 
                     class="input-textarea" 
-                    placeholder="Paste your unstructured data here...&#10;&#10;Example:&#10;181-11104 2025-01-20 11:57 N/A Pending Provider Booking Started Email sent to alexander@eksteds.com Reply type: No-reply&#10;33 more lines&#10;564-75269 2025-01-21 14:22 First Line CANCEL 1: Ask about cxnl rules / 1: Cxnl reservation"
+                    placeholder="Paste your unstructured data here...&#10;&#10;Supports both formats:&#10;&#10;Format 1: 181-11104 2025-01-20 11:57 N/A Pending Provider...&#10;&#10;Format 2: &#10;2025-09-05 13:27&#10;Klodian Hasa&#10;Athens&#10;First Line&#10;1: Phone In / 1: Rebooking..."
                 ></textarea>
                 
                 <div class="controls">
@@ -310,11 +326,15 @@
                     <button id="clearInput" class="btn btn-secondary">
                         🗑️ Clear Input
                     </button>
-                    <button id="sampleData" class="btn btn-secondary">
-                        📋 Load Sample
+                    <button id="sampleData1" class="btn btn-secondary">
+                        📋 Sample Format 1
+                    </button>
+                    <button id="sampleData2" class="btn btn-secondary">
+                        📋 Sample Format 2
                     </button>
                 </div>
 
+                <div id="formatIndicator"></div>
                 <div id="inputStatus"></div>
             </div>
 
@@ -322,7 +342,7 @@
                 <h2 class="section-title">Structured Output</h2>
                 
                 <div class="filter-info">
-                    ℹ️ Showing only records from "First Line" department with 72-hour survey logic
+                    ℹ️ Showing only records from "First Line" department with 72-hour survey logic + Current Conversation
                 </div>
 
                 <div class="stats" id="stats" style="display: none;">
@@ -380,6 +400,7 @@
     <script>
         let cleanedData = [];
         let filteredData = [];
+        let detectedFormat = '';
 
         function showStatus(elementId, message, type) {
             const element = document.getElementById(elementId);
@@ -389,21 +410,68 @@
             }, 5000);
         }
 
-        function parseDataLine(line) {
-            // Remove extra whitespace and normalize
+        function showFormatIndicator(format) {
+            const element = document.getElementById('formatIndicator');
+            element.innerHTML = `<div class="format-indicator">🔍 Detected Format: ${format}</div>`;
+        }
+
+        function getCurrentDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            return `${year}-${month}-${day} ${hours}:${minutes}`;
+        }
+
+        function detectDataFormat(rawData) {
+            const lines = rawData.split('\n').filter(line => line.trim());
+            
+            // Check for Format 2 characteristics
+            // Look for patterns like date on its own line followed by name/location info
+            let format2Indicators = 0;
+            let format1Indicators = 0;
+            
+            for (let i = 0; i < Math.min(lines.length, 20); i++) {
+                const line = lines[i].trim();
+                
+                // Format 2 indicators: standalone date, name patterns, department on own line
+                if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(line)) {
+                    format2Indicators += 2;
+                }
+                if (/^[A-Z][a-z]+ [A-Z][a-z]+$/.test(line)) {
+                    format2Indicators += 1;
+                }
+                if (/^(First Line|Second Line|N\/A)$/.test(line)) {
+                    format2Indicators += 2;
+                }
+                
+                // Format 1 indicators: reference number at start, everything on one line
+                if (/^\d{3}-\d{5,8}\s+\d{4}-\d{2}-\d{2}/.test(line)) {
+                    format1Indicators += 2;
+                }
+                if (line.includes('First Line') && line.includes('2025-') && line.length > 50) {
+                    format1Indicators += 1;
+                }
+            }
+            
+            return format2Indicators > format1Indicators ? 'Format 2' : 'Format 1';
+        }
+
+        function parseFormat1Line(line) {
+            // Original parsing logic for format 1
             line = line.trim().replace(/\s+/g, ' ');
             
             if (!line) return null;
 
-            // Extract reference number (pattern: XXX-XXXXX or similar)
             const refMatch = line.match(/^(\d{3}-\d{5,8})/);
             const reference = refMatch ? refMatch[1] : '';
             
-            // Extract date and time (pattern: YYYY-MM-DD HH:MM)
             const dateMatch = line.match(/(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})/);
             const created = dateMatch ? dateMatch[1] : '';
             
-            // Common department patterns
             const departments = ['First Line', 'Second Line', 'N/A', 'System Internal'];
             let department = 'N/A';
             for (const dept of departments) {
@@ -413,7 +481,6 @@
                 }
             }
             
-            // Extract title - common patterns
             let title = '';
             const titlePatterns = [
                 /(?:CANCEL|Pending Provider Booking Started|CXL Conf Cancellation Guarantee|Backend BOM|Chat.*?refund)/i
@@ -427,10 +494,8 @@
                 }
             }
             
-            // If no specific title found, try to extract meaningful part
             if (!title) {
                 const parts = line.split(/\s+/);
-                // Look for capitalized words that might be titles
                 for (let i = 0; i < parts.length; i++) {
                     if (parts[i] && parts[i][0] === parts[i][0].toUpperCase() && parts[i].length > 2) {
                         if (!reference.includes(parts[i]) && !created.includes(parts[i]) && !department.includes(parts[i])) {
@@ -441,15 +506,12 @@
                 }
             }
             
-            // Everything else goes to note
             let note = line;
-            // Remove the parts we've extracted
             if (reference) note = note.replace(reference, '').trim();
             if (created) note = note.replace(created, '').trim();
             if (department && department !== 'N/A') note = note.replace(department, '').trim();
             if (title) note = note.replace(title, '').trim();
             
-            // Clean up note
             note = note.replace(/^\s*[-:]\s*/, '').trim();
             
             return {
@@ -461,6 +523,118 @@
             };
         }
 
+        function parseFormat2Data(rawData) {
+            const lines = rawData.split('\n');
+            const records = [];
+            let i = 0;
+
+            while (i < lines.length) {
+                const line = lines[i].trim();
+                
+                // Skip empty lines and "X more lines" indicators
+                if (!line || /^\d+ more lines?$/.test(line)) {
+                    i++;
+                    continue;
+                }
+
+                // Look for date pattern
+                const dateMatch = line.match(/^(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})/);
+                if (dateMatch) {
+                    const created = dateMatch[1];
+                    let agent = '';
+                    let location = '';
+                    let department = '';
+                    let title = '';
+                    let note = '';
+
+                    i++; // Move to next line
+
+                    // Parse agent name (should be next line)
+                    if (i < lines.length && lines[i].trim()) {
+                        const agentLine = lines[i].trim();
+                        // Check if it looks like a name (2+ words, first letters capitalized)
+                        if (/^[A-Z][a-z]+(\s+[A-Z][a-z]+)+$/.test(agentLine)) {
+                            agent = agentLine;
+                            i++;
+                        }
+                    }
+
+                    // Parse location (next line if present)
+                    if (i < lines.length && lines[i].trim()) {
+                        const locationLine = lines[i].trim();
+                        // If it's not a known department, treat as location
+                        if (!['First Line', 'Second Line', 'N/A', 'System Internal'].includes(locationLine)) {
+                            location = locationLine;
+                            i++;
+                        }
+                    }
+
+                    // Parse department (should be next)
+                    if (i < lines.length && lines[i].trim()) {
+                        const deptLine = lines[i].trim();
+                        if (['First Line', 'Second Line', 'N/A', 'System Internal'].includes(deptLine)) {
+                            department = deptLine;
+                            i++;
+                        }
+                    }
+
+                    // Parse title and note (everything else until next date or end)
+                    let titleLines = [];
+                    let noteLines = [];
+                    let inNote = false;
+
+                    while (i < lines.length) {
+                        const currentLine = lines[i].trim();
+                        
+                        // Stop if we hit another date or "X more lines"
+                        if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}/.test(currentLine) || /^\d+ more lines?$/.test(currentLine)) {
+                            break;
+                        }
+
+                        if (!currentLine) {
+                            i++;
+                            continue;
+                        }
+
+                        // Heuristic: if line starts with numbers and colons, it's likely title
+                        // if it's longer descriptive text, it's likely note
+                        if (/^\d+:/.test(currentLine) || currentLine.includes('Payment link') || currentLine.includes('CANCEL')) {
+                            if (!inNote) titleLines.push(currentLine);
+                        } else if (currentLine.includes('Note:') || currentLine.includes('Errand case') || 
+                                 currentLine.includes('Customer contact') || currentLine.includes('https://')) {
+                            inNote = true;
+                            noteLines.push(currentLine);
+                        } else if (inNote) {
+                            noteLines.push(currentLine);
+                        } else if (titleLines.length === 0) {
+                            titleLines.push(currentLine);
+                        } else {
+                            noteLines.push(currentLine);
+                        }
+
+                        i++;
+                    }
+
+                    title = titleLines.join(' | ').trim() || 'Unknown';
+                    note = noteLines.join(' ').trim() || 'No additional information';
+
+                    records.push({
+                        reference: generateReference(),
+                        created: created,
+                        department: department || 'N/A',
+                        title: title,
+                        note: note,
+                        agent: agent,
+                        location: location
+                    });
+                } else {
+                    i++;
+                }
+            }
+
+            return records;
+        }
+
         function generateReference() {
             return Math.floor(Math.random() * 900 + 100) + '-' + Math.floor(Math.random() * 90000 + 10000);
         }
@@ -468,21 +642,18 @@
         function calculatePotentialSurvey(data) {
             if (data.length === 0) return data;
             
-            // Sort data by created date to ensure chronological order
             const sortedData = [...data].sort((a, b) => new Date(a.created) - new Date(b.created));
             
-            // Set first row as "Yes"
             sortedData[0].potentialSurvey = 'Yes';
             let lastYesDate = new Date(sortedData[0].created);
             
-            // Process remaining rows
             for (let i = 1; i < sortedData.length; i++) {
                 const currentDate = new Date(sortedData[i].created);
-                const timeDifferenceHours = (currentDate - lastYesDate) / (1000 * 60 * 60); // Convert to hours
+                const timeDifferenceHours = (currentDate - lastYesDate) / (1000 * 60 * 60);
                 
                 if (timeDifferenceHours >= 72) {
                     sortedData[i].potentialSurvey = 'Yes';
-                    lastYesDate = currentDate; // Update the reference date
+                    lastYesDate = currentDate;
                 } else {
                     sortedData[i].potentialSurvey = 'No';
                 }
@@ -491,22 +662,81 @@
             return sortedData;
         }
 
+        function addCurrentConversationRow(data) {
+            if (data.length === 0) {
+                // If no data, current conversation is always "Yes"
+                return [{
+                    created: getCurrentDateTime(),
+                    department: 'First Line',
+                    potentialSurvey: 'Yes (Current Conversation)',
+                    isCurrentConversation: true
+                }];
+            }
+            
+            // Get the last record's date
+            const sortedData = [...data].sort((a, b) => new Date(a.created) - new Date(b.created));
+            const lastRecord = sortedData[sortedData.length - 1];
+            const lastYesRecord = sortedData.slice().reverse().find(record => record.potentialSurvey === 'Yes');
+            
+            const currentDateTime = getCurrentDateTime();
+            const currentDate = new Date(currentDateTime);
+            
+            let surveyStatus = 'No';
+            
+            // Check against the last "Yes" record, not just the last record
+            if (lastYesRecord) {
+                const lastYesDate = new Date(lastYesRecord.created);
+                const timeDifferenceHours = (currentDate - lastYesDate) / (1000 * 60 * 60);
+                
+                if (timeDifferenceHours >= 72) {
+                    surveyStatus = 'Yes';
+                }
+            } else {
+                // If no "Yes" records found, default to "Yes" for current conversation
+                surveyStatus = 'Yes';
+            }
+            
+            // Add current conversation row
+            const currentConversationRow = {
+                created: currentDateTime,
+                department: 'First Line',
+                potentialSurvey: `${surveyStatus} (Current Conversation)`,
+                isCurrentConversation: true
+            };
+            
+            return [...data, currentConversationRow];
+        }
+
         function cleanData() {
             const rawData = document.getElementById('rawData').value.trim();
             
+            // Always show current conversation row, even if no input data
             if (!rawData) {
-                showStatus('inputStatus', '⚠️ Please enter some data to clean', 'error');
+                // Create just the current conversation row
+                filteredData = addCurrentConversationRow([]);
+                displayCleanedData();
+                showStatus('inputStatus', '✅ Current conversation row added. Add data to see historical records.', 'success');
                 return;
             }
 
             try {
-                const lines = rawData.split('\n').filter(line => line.trim());
+                // Detect format
+                detectedFormat = detectDataFormat(rawData);
+                showFormatIndicator(detectedFormat);
+
                 cleanedData = [];
 
-                for (const line of lines) {
-                    const parsed = parseDataLine(line);
-                    if (parsed) {
-                        cleanedData.push(parsed);
+                if (detectedFormat === 'Format 2') {
+                    // Use new parsing logic for format 2
+                    cleanedData = parseFormat2Data(rawData);
+                } else {
+                    // Use original parsing logic for format 1
+                    const lines = rawData.split('\n').filter(line => line.trim());
+                    for (const line of lines) {
+                        const parsed = parseFormat1Line(line);
+                        if (parsed) {
+                            cleanedData.push(parsed);
+                        }
                     }
                 }
 
@@ -518,21 +748,13 @@
                     filteredData = calculatePotentialSurvey(filteredData);
                 }
 
-                if (filteredData.length > 0) {
-                    displayCleanedData();
-                    const totalRecords = cleanedData.length;
-                    const firstLineRecords = filteredData.length;
-                    showStatus('inputStatus', `✅ Successfully processed ${totalRecords} records, showing ${firstLineRecords} "First Line" records`, 'success');
-                } else {
-                    const totalRecords = cleanedData.length;
-                    if (totalRecords > 0) {
-                        showStatus('inputStatus', `⚠️ Processed ${totalRecords} records but found no "First Line" department records to display`, 'error');
-                        // Still show empty state
-                        hideTable();
-                    } else {
-                        showStatus('inputStatus', '⚠️ No valid data found to process', 'error');
-                    }
-                }
+                // Add current conversation row
+                filteredData = addCurrentConversationRow(filteredData);
+
+                displayCleanedData();
+                const totalRecords = cleanedData.length;
+                const firstLineRecords = filteredData.length - 1; // Subtract 1 for current conversation row
+                showStatus('inputStatus', `✅ Successfully processed ${totalRecords} records using ${detectedFormat}, showing ${firstLineRecords} "First Line" records + Current Conversation`, 'success');
 
             } catch (error) {
                 console.error('Error cleaning data:', error);
@@ -547,29 +769,30 @@
             const exportButtons = document.querySelectorAll('.btn-export');
             const stats = document.getElementById('stats');
             
-            // Clear existing data
             tableBody.innerHTML = '';
             
-            // Add rows - showing Created, Department, and Potential Survey columns
             filteredData.forEach(row => {
                 const tr = document.createElement('tr');
+                
+                // Add special styling for current conversation row
+                if (row.isCurrentConversation) {
+                    tr.className = 'current-conversation';
+                }
+                
                 tr.innerHTML = `
                     <td>${escapeHtml(row.created)}</td>
                     <td>${escapeHtml(row.department)}</td>
-                    <td><span class="survey-${row.potentialSurvey.toLowerCase()}">${escapeHtml(row.potentialSurvey)}</span></td>
+                    <td><span class="survey-${row.potentialSurvey.toLowerCase().includes('yes') ? 'yes' : 'no'}">${escapeHtml(row.potentialSurvey)}</span></td>
                 `;
                 tableBody.appendChild(tr);
             });
             
-            // Show table and hide empty state
             outputTable.style.display = 'table';
             emptyState.style.display = 'none';
-            
-            // Show export buttons
             exportButtons.forEach(btn => btn.style.display = 'inline-flex');
             
-            // Update stats
-            const surveyYesCount = filteredData.filter(row => row.potentialSurvey === 'Yes').length;
+            const surveyYesCount = filteredData.filter(row => row.potentialSurvey.includes('Yes')).length;
+            const historicalRecords = filteredData.filter(row => !row.isCurrentConversation).length;
             document.getElementById('recordCount').textContent = filteredData.length;
             document.getElementById('surveyCount').textContent = surveyYesCount;
             stats.style.display = 'grid';
@@ -615,7 +838,6 @@
         function exportJSON() {
             if (filteredData.length === 0) return;
             
-            // Only export the columns we're displaying
             const exportData = filteredData.map(row => ({
                 created: row.created,
                 department: row.department,
@@ -639,7 +861,7 @@
             URL.revokeObjectURL(url);
         }
 
-        function loadSampleData() {
+        function loadSampleData1() {
             const sampleData = `181-11104 2025-01-20 11:57 N/A Pending Provider Booking Started Email sent to alexander@eksteds.com Reply type: No-reply
 33 more lines
 564-75269 2025-01-21 14:22 First Line CANCEL 1: Ask about cxnl rules / 1: Cxnl reservation
@@ -653,18 +875,64 @@ As per YY Policy refund can be claimed only after departure hence LTD label adde
 https://apps.mypurecloud.de/directory/#/engage/admin/interactions/c1fe6bb1-8f12-4d05-8d1e-9694d404eb29 Viktor Alexander Ekstedt pax asking regar`;
             
             document.getElementById('rawData').value = sampleData;
-            showStatus('inputStatus', '📋 Sample data loaded successfully', 'success');
+            showStatus('inputStatus', '📋 Sample Format 1 data loaded successfully', 'success');
+        }
+
+        function loadSampleData2() {
+            const sampleData = `2025-09-05 13:27
+Klodian Hasa
+Athens
+First Line
+1: Phone In / 1: Rebooking
+2: Against Flexible Ticket / 6: Sent to support
+Errand case created and added to queue Customer contact name: Lars Genesys ID: https://apps.mypurecloud.de/directory/#/engage/admin/interactions/f89a996e-7db6-4447-8d2a-94f0ff9a481f
+45 more lines
+
+2025-09-05 16:10
+Namrata Yadav
+WNS, Pune
+First Line
+Payment link activated
+Note: Tue, 30 Sep - PC1044 Departing: Hamburg (HAM) at 13:50 Arriving: Istanbul Sabiha Gokcen (SAW) at 18:05
+4 more lines
+
+2025-09-07 09:15
+Maria Rodriguez
+Madrid
+Second Line
+3: Backend / 34: Backend BOM
+8: Vol rfd / 4: Already handled
+As per YY Policy refund can be claimed only after departure hence LTD label added
+12 more lines
+
+2025-09-08 14:30
+John Smith
+London
+First Line
+19: Chat / 2: Cancellation / refund
+2: Already cxnl / 6: Other
+Customer requesting refund for cancelled flight. Processing according to policy guidelines.
+8 more lines`;
+            
+            document.getElementById('rawData').value = sampleData;
+            showStatus('inputStatus', '📋 Sample Format 2 data loaded successfully', 'success');
         }
 
         function clearInput() {
             document.getElementById('rawData').value = '';
-            showStatus('inputStatus', '🗑️ Input cleared', 'success');
+            document.getElementById('formatIndicator').innerHTML = '';
+            
+            // Show just the current conversation row when input is cleared
+            filteredData = addCurrentConversationRow([]);
+            displayCleanedData();
+            showStatus('inputStatus', '🗑️ Input cleared - showing current conversation only', 'success');
         }
 
         // Event listeners
         document.getElementById('cleanData').addEventListener('click', cleanData);
         document.getElementById('clearInput').addEventListener('click', clearInput);
-        document.getElementById('sampleData').addEventListener('click', loadSampleData);
+        document.getElementById('sampleData1').addEventListener('click', loadSampleData1);
+        document.getElementById('sampleData2').addEventListener('click', loadSampleData2);
         document.getElementById('exportCSV').addEventListener('click', exportCSV);
         document.getElementById('exportJSON').addEventListener('click', exportJSON);
 
@@ -673,6 +941,12 @@ https://apps.mypurecloud.de/directory/#/engage/admin/interactions/c1fe6bb1-8f12-
             if (e.ctrlKey && e.key === 'Enter') {
                 cleanData();
             }
+        });
+
+        // Initialize with current conversation row on page load
+        window.addEventListener('load', function() {
+            filteredData = addCurrentConversationRow([]);
+            displayCleanedData();
         });
     </script>
 </body>
