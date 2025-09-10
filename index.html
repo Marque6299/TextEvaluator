@@ -15,7 +15,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
         }
 
         .container {
@@ -27,14 +26,23 @@
             backdrop-filter: blur(10px);
             overflow: hidden;
         }
+        .sticky-header{
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: inherit;
+            border-bottom: #ffffff solid 3px;
+            border-radius: 12px;
+        }
 
         .header {
             background: linear-gradient(135deg, #0e0aee 0%, #049da5 100%);
             color: white;
             padding: 5px;
             text-align: center;
+            border-radius: 12px;
         }
-
+        
         .header h1 {
             font-size: 1.2em;
             margin-bottom: 2px;
@@ -169,6 +177,16 @@
         }
 
         .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-primary1 {
+            background: linear-gradient(135deg, #e26906 0%, #fe0000ef 100%);
+            color: white;
+        }
+
+        .btn-primary1:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
         }
@@ -425,7 +443,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="sticky-header">
         <div class="header" id="headerElement">
             <h1>📊 Survey Evaluator</h1>
         </div>
@@ -433,7 +451,8 @@
         <div class="survey-warning" id="surveyWarning">
             ⚠️ Survey will be generated - Careful
         </div>
-
+    </div>
+    <div class="container">
         <div class="main-content">
             <div class="input-section">
                 <h2 class="section-title">Paste Errand Notes here</h2>
@@ -448,7 +467,7 @@
                     <button id="cleanData" class="btn btn-primary">
                         🔄 Generate Results
                     </button>
-                    <button id="clearInput" class="btn btn-primary">
+                    <button id="clearInput" class="btn btn-primary1">
                         🗑️ Clear Input
                     </button>
                     <button id="sampleData1" class="btn btn-secondary">
