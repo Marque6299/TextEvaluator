@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Cleaner & Structurer</title>
+    <title>ID - FTP</title>
     <style>
         * {
             margin: 0;
@@ -33,6 +33,29 @@
             color: white;
             padding: 30px;
             text-align: center;
+            transition: background 0.3s ease;
+        }
+
+        .header.survey-yes {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            animation: headerBlink 2s ease-in-out infinite alternate;
+            color: white;
+        }
+
+        .header.survey-no {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            color: white;
+        }
+
+        @keyframes headerBlink {
+            0% {
+                background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                box-shadow: 0 0 20px rgba(40, 167, 69, 0.3);
+            }
+            100% {
+                background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
+                box-shadow: 0 0 30px rgba(40, 167, 69, 0.6);
+            }
         }
 
         .header h1 {
@@ -44,6 +67,32 @@
         .header p {
             font-size: 1.1em;
             opacity: 0.9;
+        }
+
+        .survey-warning {
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            padding: 15px;
+            margin: 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            box-shadow: 0 2px 10px rgba(220, 53, 69, 0.3);
+            display: none;
+        }
+
+        .survey-warning.show {
+            display: block;
+            animation: warningPulse 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes warningPulse {
+            0% {
+                background: rgba(220, 53, 69, 0.9);
+            }
+            100% {
+                background: rgba(220, 53, 69, 1);
+            }
         }
 
         .main-content {
@@ -129,6 +178,7 @@
             background: #f8f9fa;
             color: #495057;
             border: 2px solid #e1e5e9;
+            display: none;
         }
 
         .btn-secondary:hover {
@@ -267,6 +317,7 @@
             border-radius: 8px;
             text-align: center;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: none;
         }
 
         .stat-number {
@@ -289,6 +340,7 @@
             margin: 10px 0;
             font-size: 14px;
             border: 1px solid rgba(79, 172, 254, 0.2);
+            display: none;
         }
 
         .format-indicator {
@@ -300,6 +352,7 @@
             font-size: 12px;
             border: 1px solid rgba(138, 43, 226, 0.2);
             font-weight: 500;
+            display: none;
         }
 
         /* Time Logic Toggle Styles */
@@ -310,6 +363,7 @@
             padding: 20px;
             margin: 20px 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: none;
         }
 
         .time-logic-title {
@@ -317,20 +371,20 @@
             font-weight: 600;
             color: #333;
             margin-bottom: 15px;
-            display: flex;
+            display: none;
             align-items: center;
             gap: 8px;
         }
 
         .time-logic-options {
-            display: flex;
+            display: none;
             gap: 15px;
             flex-wrap: wrap;
             align-items: center;
         }
 
         .time-option {
-            display: flex;
+            display: none;
             align-items: center;
             gap: 8px;
             cursor: pointer;
@@ -347,6 +401,7 @@
         .time-option.active {
             background: rgba(79, 172, 254, 0.1);
             border-color: #4facfe;
+            display: none;
         }
 
         .time-option input[type="radio"] {
@@ -354,6 +409,7 @@
             height: 18px;
             margin: 0;
             cursor: pointer;
+            display: none;
         }
 
         .time-option label {
@@ -362,6 +418,7 @@
             color: #333;
             cursor: pointer;
             margin: 0;
+            display: none;
         }
 
         .time-logic-description {
@@ -369,6 +426,7 @@
             font-size: 13px;
             color: #6c757d;
             line-height: 1.4;
+            display: none;
         }
 
         .current-setting {
@@ -380,19 +438,35 @@
             font-size: 13px;
             border: 1px solid rgba(40, 167, 69, 0.2);
             font-weight: 500;
+            display: none;
+        }
+
+        .agent-name {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .location {
+            font-size: 0.9em;
+            color: #6c757d;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>📊 Data Cleaner & Structurer</h1>
-            <p>Transform messy data into clean, structured tables (Auto-detects format - First Line Department Only + Current Conversation)</p>
+        <div class="header" id="headerElement">
+            <h1>📊 FTP Evaluator</h1>
+        </div>
+        
+        <div class="survey-warning" id="surveyWarning">
+            ⚠️ Survey will be generated - Careful
         </div>
 
         <div class="main-content">
             <div class="input-section">
-                <h2 class="section-title">Raw Data Input</h2>
+                <h2 class="section-title">Paste Errand Notes here</h2>
+                <div id="inputStatus"></div>
                 <textarea 
                     id="rawData" 
                     class="input-textarea" 
@@ -401,7 +475,7 @@
                 
                 <div class="controls">
                     <button id="cleanData" class="btn btn-primary">
-                        🔄 Clean & Structure Data
+                        🔄 Generate Results
                     </button>
                     <button id="clearInput" class="btn btn-secondary">
                         🗑️ Clear Input
@@ -415,7 +489,7 @@
                 </div>
 
                 <!-- Time Logic Toggle Section -->
-                <div class="time-logic-container">
+                <div class="time-logic-container" id="timeLogicContainer" style="display: none;">
                     <div class="time-logic-title">
                         ⏰ Survey Time Logic Settings
                     </div>
@@ -438,11 +512,10 @@
                 </div>
 
                 <div id="formatIndicator"></div>
-                <div id="inputStatus"></div>
             </div>
 
             <div class="output-section">
-                <h2 class="section-title">Structured Output</h2>
+                <h2 class="section-title">Evaluated Results</h2>
                 
                 <div class="filter-info" id="filterInfo">
                     ℹ️ Showing only records from "First Line" department with 72-hour survey logic + Current Conversation
@@ -454,7 +527,7 @@
                         <div class="stat-label">First Line Records</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="columnCount">3</div>
+                        <div class="stat-number" id="columnCount">5</div>
                         <div class="stat-label">Columns</div>
                     </div>
                     <div class="stat-card">
@@ -469,6 +542,8 @@
                             <thead>
                                 <tr>
                                     <th>Created</th>
+                                    <th>Agent Name</th>
+                                    <th>Location</th>
                                     <th>Department</th>
                                     <th>Potential Survey</th>
                                 </tr>
@@ -506,6 +581,43 @@
         let detectedFormat = '';
         let selectedTimeLogic = 72; // Default to 72 hours
 
+        function updateHeaderSurveyStatus() {
+            const headerElement = document.getElementById('headerElement');
+            const surveyWarning = document.getElementById('surveyWarning');
+            
+            // Only apply header logic if we have 2 or more rows in the table
+            if (filteredData.length < 2) {
+                // Reset to default blue background with white text
+                headerElement.classList.remove('survey-yes', 'survey-no');
+                surveyWarning.classList.remove('show');
+                return;
+            }
+            
+            // Find the current conversation row
+            const currentConversationRow = filteredData.find(row => row.isCurrentConversation);
+            
+            if (currentConversationRow) {
+                const willGenerateSurvey = currentConversationRow.potentialSurvey.includes('Yes');
+                
+                // Reset classes
+                headerElement.classList.remove('survey-yes', 'survey-no');
+                surveyWarning.classList.remove('show');
+                
+                if (willGenerateSurvey) {
+                    // Green background with blinking effect + warning message
+                    headerElement.classList.add('survey-yes');
+                    surveyWarning.classList.add('show');
+                } else {
+                    // Yellow background without blinking effect
+                    headerElement.classList.add('survey-no');
+                }
+            } else {
+                // Reset to default state if no current conversation found
+                headerElement.classList.remove('survey-yes', 'survey-no');
+                surveyWarning.classList.remove('show');
+            }
+        }
+
         function showStatus(elementId, message, type) {
             const element = document.getElementById(elementId);
             element.innerHTML = `<div class="status ${type}">${message}</div>`;
@@ -527,6 +639,11 @@
         function updateCurrentSetting() {
             const element = document.getElementById('currentSetting');
             element.innerHTML = `✅ Currently using ${selectedTimeLogic}-hour logic`;
+        }
+
+        function showTimeLogicContainer() {
+            const container = document.getElementById('timeLogicContainer');
+            container.style.display = 'none';
         }
 
         function getCurrentDateTime() {
@@ -575,7 +692,7 @@
         }
 
         function parseFormat1Line(line) {
-            // Original parsing logic for format 1
+            // Original parsing logic for format 1 with agent and location extraction
             line = line.trim().replace(/\s+/g, ' ');
             
             if (!line) return null;
@@ -633,7 +750,9 @@
                 created: created || new Date().toISOString().slice(0, 16).replace('T', ' '),
                 department: department,
                 title: title || 'Unknown',
-                note: note || 'No additional information'
+                note: note || 'No additional information',
+                agent: 'N/A', // Format 1 doesn't typically have agent info
+                location: 'N/A' // Format 1 doesn't typically have location info
             };
         }
 
@@ -655,9 +774,9 @@
                 const dateMatch = line.match(/^(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})/);
                 if (dateMatch) {
                     const created = dateMatch[1];
-                    let agent = '';
-                    let location = '';
-                    let department = '';
+                    let agent = 'N/A';
+                    let location = 'N/A';
+                    let department = 'N/A';
                     let title = '';
                     let note = '';
 
@@ -735,7 +854,7 @@
                     records.push({
                         reference: generateReference(),
                         created: created,
-                        department: department || 'N/A',
+                        department: department,
                         title: title,
                         note: note,
                         agent: agent,
@@ -782,7 +901,9 @@
                 return [{
                     created: getCurrentDateTime(),
                     department: 'First Line',
-                    potentialSurvey: 'Yes (Current Conversation)',
+                    agent: 'Current User',
+                    location: 'Iloilo',
+                    potentialSurvey: 'Yes - (Current Conversation)',
                     isCurrentConversation: true
                 }];
             }
@@ -814,7 +935,9 @@
             const currentConversationRow = {
                 created: currentDateTime,
                 department: 'First Line',
-                potentialSurvey: `${surveyStatus} (Current Conversation)`,
+                agent: 'Current User',
+                location: 'Iloilo',
+                potentialSurvey: `${surveyStatus} - (Current Conversation)`,
                 isCurrentConversation: true
             };
             
@@ -829,7 +952,7 @@
                 // Create just the current conversation row
                 filteredData = addCurrentConversationRow([]);
                 displayCleanedData();
-                showStatus('inputStatus', '✅ Current conversation row added. Add data to see historical records.', 'success');
+                showStatus('inputStatus', 'Current conversation row added. Add data to see historical records.', 'success');
                 return;
             }
 
@@ -865,14 +988,17 @@
                 // Add current conversation row
                 filteredData = addCurrentConversationRow(filteredData);
 
+                // Show time logic container after first evaluation
+                showTimeLogicContainer();
+
                 displayCleanedData();
                 const totalRecords = cleanedData.length;
                 const firstLineRecords = filteredData.length - 1; // Subtract 1 for current conversation row
-                showStatus('inputStatus', `✅ Successfully processed ${totalRecords} records using ${detectedFormat}, showing ${firstLineRecords} "First Line" records + Current Conversation (${selectedTimeLogic}h logic)`, 'success');
+                showStatus('inputStatus', `Successfully processed ${totalRecords} records using ${detectedFormat}, showing ${firstLineRecords} "First Line" records + Current Conversation (${selectedTimeLogic}h logic)`, 'success');
 
             } catch (error) {
                 console.error('Error cleaning data:', error);
-                showStatus('inputStatus', '❌ Error processing data: ' + error.message, 'error');
+                showStatus('inputStatus', 'Error processing data: ' + error.message, 'error');
             }
         }
 
@@ -895,6 +1021,8 @@
                 
                 tr.innerHTML = `
                     <td>${escapeHtml(row.created)}</td>
+                    <td><span class="agent-name">${escapeHtml(row.agent)}</span></td>
+                    <td><span class="location">${escapeHtml(row.location)}</span></td>
                     <td>${escapeHtml(row.department)}</td>
                     <td><span class="survey-${row.potentialSurvey.toLowerCase().includes('yes') ? 'yes' : 'no'}">${escapeHtml(row.potentialSurvey)}</span></td>
                 `;
@@ -910,6 +1038,9 @@
             document.getElementById('recordCount').textContent = filteredData.length;
             document.getElementById('surveyCount').textContent = surveyYesCount;
             stats.style.display = 'grid';
+            
+            // Update header survey status indicator
+            updateHeaderSurveyStatus();
         }
 
         function hideTable() {
@@ -933,12 +1064,14 @@
         function exportCSV() {
             if (filteredData.length === 0) return;
             
-            const headers = ['Created', 'Department', 'Potential Survey'];
+            const headers = ['Created', 'Agent Name', 'Location', 'Department', 'Potential Survey'];
             let csv = headers.join(',') + '\n';
             
             filteredData.forEach(row => {
                 const csvRow = [
                     `"${row.created}"`,
+                    `"${row.agent}"`,
+                    `"${row.location}"`,
                     `"${row.department}"`,
                     `"${row.potentialSurvey}"`
                 ];
@@ -946,7 +1079,7 @@
             });
             
             downloadFile(csv, `first_line_data_${selectedTimeLogic}h.csv`, 'text/csv');
-            showStatus('outputStatus', `✅ CSV file downloaded successfully (${selectedTimeLogic}h logic)`, 'success');
+            showStatus('outputStatus', `CSV file downloaded successfully (${selectedTimeLogic}h logic)`, 'success');
         }
 
         function exportJSON() {
@@ -954,6 +1087,8 @@
             
             const exportData = filteredData.map(row => ({
                 created: row.created,
+                agent: row.agent,
+                location: row.location,
                 department: row.department,
                 potentialSurvey: row.potentialSurvey,
                 timeLogicUsed: selectedTimeLogic + ' hours'
@@ -961,7 +1096,7 @@
             
             const json = JSON.stringify(exportData, null, 2);
             downloadFile(json, `first_line_data_${selectedTimeLogic}h.json`, 'application/json');
-            showStatus('outputStatus', `✅ JSON file downloaded successfully (${selectedTimeLogic}h logic)`, 'success');
+            showStatus('outputStatus', `JSON file downloaded successfully (${selectedTimeLogic}h logic)`, 'success');
         }
 
         function downloadFile(content, filename, contentType) {
@@ -990,7 +1125,7 @@ As per YY Policy refund can be claimed only after departure hence LTD label adde
 https://apps.mypurecloud.de/directory/#/engage/admin/interactions/c1fe6bb1-8f12-4d05-8d1e-9694d404eb29 Viktor Alexander Ekstedt pax asking regar`;
             
             document.getElementById('rawData').value = sampleData;
-            showStatus('inputStatus', '📋 Sample Format 1 data loaded successfully', 'success');
+            showStatus('inputStatus', 'Sample Format 1 data loaded successfully', 'success');
         }
 
         function loadSampleData2() {
@@ -1030,7 +1165,7 @@ Customer requesting refund for cancelled flight. Processing according to policy 
 8 more lines`;
             
             document.getElementById('rawData').value = sampleData;
-            showStatus('inputStatus', '📋 Sample Format 2 data loaded successfully', 'success');
+            showStatus('inputStatus', 'Sample Format 2 data loaded successfully', 'success');
         }
 
         function clearInput() {
@@ -1040,7 +1175,7 @@ Customer requesting refund for cancelled flight. Processing according to policy 
             // Show just the current conversation row when input is cleared
             filteredData = addCurrentConversationRow([]);
             displayCleanedData();
-            showStatus('inputStatus', `🗑️ Input cleared - showing current conversation only (${selectedTimeLogic}h logic)`, 'success');
+            showStatus('inputStatus', `Input cleared - showing current conversation only (${selectedTimeLogic}h logic)`, 'success');
         }
 
         function handleTimeLogicChange() {
@@ -1072,7 +1207,7 @@ Customer requesting refund for cancelled flight. Processing according to policy 
                 }
                 
                 displayCleanedData();
-                showStatus('inputStatus', `⏰ Survey logic updated to ${selectedTimeLogic} hours and data recalculated`, 'success');
+                showStatus('inputStatus', `Survey logic updated to ${selectedTimeLogic} hours and data recalculated`, 'success');
             }
         }
 
