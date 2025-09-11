@@ -220,7 +220,7 @@
             border-radius: 12px;
             padding: 15px;
             margin: 15px 0;
-            display: none;
+            display: block;
         }
 
         .channel-filter-title {
@@ -632,7 +632,7 @@
         let displayedData = [];
         let detectedFormat = '';
         let selectedTimeLogic = 72; // Default to 72 hours
-        let selectedChannel = 'All'; // Default to show all channels
+        let selectedChannel = 'Voice'; // Default to show all channels
 
         function identifyChannel(title) {
             if (title.includes('1: Phone In') || title.includes('1: Phone In')) {
