@@ -213,6 +213,55 @@
             box-shadow: 0 8px 25px rgba(86, 171, 47, 0.3);
         }
 
+        /* Channel Filter Styles */
+        .channel-filter {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .channel-filter-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .channel-filter-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .channel-btn {
+            padding: 8px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            background: white;
+            color: #495057;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .channel-btn:hover {
+            border-color: #4facfe;
+            background: rgba(79, 172, 254, 0.05);
+        }
+
+        .channel-btn.active {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-color: #4facfe;
+        }
+
         .output-container {
             border: 2px solid #e1e5e9;
             border-radius: 12px;
@@ -266,6 +315,21 @@
 
         .current-conversation {
             background: rgba(255, 193, 7, 0.1);
+            font-weight: 500;
+        }
+
+        .channel-voice {
+            color: #17a2b8;
+            font-weight: 500;
+        }
+
+        .channel-chat {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .channel-other {
+            color: #6c757d;
             font-weight: 500;
         }
 
@@ -465,7 +529,7 @@
                 
                 <div class="controls">
                     <button id="cleanData" class="btn btn-primary">
-                        🔄 Generate Results
+                        🔥 Generate Results
                     </button>
                     <button id="clearInput" class="btn btn-primary1">
                         🗑️ Clear Input
@@ -511,6 +575,17 @@
                     ℹ️ Showing only records from "First Line" department with 72-hour survey logic + Current Conversation
                 </div>
 
+                <!-- Channel Filter Section -->
+                <div class="channel-filter" id="channelFilter">
+                    <div class="channel-filter-title">
+                        📞 Channel Filter
+                    </div>
+                    <div class="channel-filter-options">
+                        <button class="channel-btn active" data-channel="Voice">Voice</button>
+                        <button class="channel-btn" data-channel="Chat">Chat</button>
+                    </div>
+                </div>
+
                 <div class="output-container">
                     <div class="table-wrapper">
                         <table id="outputTable" style="display: none;">
@@ -520,6 +595,7 @@
                                     <th>Agent Name</th>
                                     <th>Location</th>
                                     <th>Department</th>
+                                    <th>Channel</th>
                                     <th>Potential Survey</th>
                                 </tr>
                             </thead>
@@ -553,20 +629,32 @@
     <script>
         let cleanedData = [];
         let filteredData = [];
+        let displayedData = [];
         let detectedFormat = '';
         let selectedTimeLogic = 72; // Default to 72 hours
+        let selectedChannel = 'All'; // Default to show all channels
+
+        function identifyChannel(title) {
+            if (title.includes('1: Phone In') || title.includes('1: Phone In')) {
+                return 'Voice';
+            } else if (title.includes('19: Chat') || title.includes('19: Chat')) {
+                return 'Chat';
+            } else {
+                return 'Other';
+            }
+        }
 
         function updateSurveyWarning() {
             const surveyWarning = document.getElementById('surveyWarning');
             
             // Only apply logic if we have 2 or more rows in the table
-            if (filteredData.length < 2) {
+            if (displayedData.length < 2) {
                 surveyWarning.classList.remove('show-yes', 'show-no');
                 return;
             }
             
             // Find the current conversation row
-            const currentConversationRow = filteredData.find(row => row.isCurrentConversation);
+            const currentConversationRow = displayedData.find(row => row.isCurrentConversation);
             
             if (currentConversationRow) {
                 const willGenerateSurvey = currentConversationRow.potentialSurvey.includes('Yes');
@@ -603,8 +691,9 @@
         }
 
         function updateFilterInfo() {
+            const channelText = selectedChannel === 'All' ? 'all channels' : selectedChannel.toLowerCase() + ' channel';
             const element = document.getElementById('filterInfo');
-            element.innerHTML = `ℹ️ Showing only records from "First Line" department with ${selectedTimeLogic}-hour survey logic + Current Conversation`;
+            element.innerHTML = `ℹ️ Showing only records from "First Line" department (${channelText}) with ${selectedTimeLogic}-hour survey logic + Current Conversation`;
         }
 
         function updateCurrentSetting() {
@@ -615,6 +704,11 @@
         function showTimeLogicContainer() {
             const container = document.getElementById('timeLogicContainer');
             container.style.display = 'none';
+        }
+
+        function showChannelFilter() {
+            const channelFilter = document.getElementById('channelFilter');
+            channelFilter.style.display = 'block';
         }
 
         function getCurrentDateTime() {
@@ -716,6 +810,8 @@
             
             note = note.replace(/^\s*[-:]\s*/, '').trim();
             
+            const channel = identifyChannel(title + ' ' + note);
+            
             return {
                 reference: reference || generateReference(),
                 created: created || new Date().toISOString().slice(0, 16).replace('T', ' '),
@@ -723,7 +819,8 @@
                 title: title || 'Unknown',
                 note: note || 'No additional information',
                 agent: 'N/A', // Format 1 doesn't typically have agent info
-                location: 'N/A' // Format 1 doesn't typically have location info
+                location: 'N/A', // Format 1 doesn't typically have location info
+                channel: channel
             };
         }
 
@@ -822,6 +919,8 @@
                     title = titleLines.join(' | ').trim() || 'Unknown';
                     note = noteLines.join(' ').trim() || 'No additional information';
 
+                    const channel = identifyChannel(title + ' ' + note);
+
                     records.push({
                         reference: generateReference(),
                         created: created,
@@ -829,7 +928,8 @@
                         title: title,
                         note: note,
                         agent: agent,
-                        location: location
+                        location: location,
+                        channel: channel
                     });
                 } else {
                     i++;
@@ -874,6 +974,7 @@
                     department: 'First Line',
                     agent: 'Current User',
                     location: 'Iloilo',
+                    channel: 'Voice', // Default to Voice for current conversation
                     potentialSurvey: 'Yes - (Current Conversation)',
                     isCurrentConversation: true
                 }];
@@ -908,11 +1009,52 @@
                 department: 'First Line',
                 agent: 'Current User',
                 location: 'Iloilo',
+                channel: 'Voice', // Default to Voice for current conversation
                 potentialSurvey: `${surveyStatus} - (Current Conversation)`,
                 isCurrentConversation: true
             };
             
             return [...data, currentConversationRow];
+        }
+
+        function applyChannelFilter() {
+            // Filter data based on selected channel (no "All" option anymore)
+            displayedData = filteredData.filter(record => 
+                record.channel === selectedChannel || record.isCurrentConversation
+            );
+            
+            // Recalculate potential survey logic for displayed data only
+            if (displayedData.length > 0) {
+                // Separate current conversation from historical data
+                const currentConversation = displayedData.find(record => record.isCurrentConversation);
+                const historicalData = displayedData.filter(record => !record.isCurrentConversation);
+                
+                // Recalculate survey logic for historical data
+                if (historicalData.length > 0) {
+                    const recalculatedHistorical = calculatePotentialSurvey(historicalData);
+                    
+                    // Determine current conversation survey status based on filtered data
+                    if (currentConversation) {
+                        const lastYesRecord = recalculatedHistorical.slice().reverse().find(record => record.potentialSurvey === 'Yes');
+                        const currentDate = new Date(currentConversation.created);
+                        
+                        let surveyStatus = 'Yes'; // Default for no historical data
+                        
+                        if (lastYesRecord) {
+                            const lastYesDate = new Date(lastYesRecord.created);
+                            const timeDifferenceHours = (currentDate - lastYesDate) / (1000 * 60 * 60);
+                            surveyStatus = timeDifferenceHours >= selectedTimeLogic ? 'Yes' : 'No';
+                        }
+                        
+                        // Update current conversation channel to match selected filter
+                        currentConversation.channel = selectedChannel;
+                        currentConversation.potentialSurvey = `${surveyStatus} - (Current Conversation)`;
+                        displayedData = [...recalculatedHistorical, currentConversation];
+                    } else {
+                        displayedData = recalculatedHistorical;
+                    }
+                }
+            }
         }
 
         function cleanData() {
@@ -922,6 +1064,7 @@
             if (!rawData) {
                 // Create just the current conversation row
                 filteredData = addCurrentConversationRow([]);
+                applyChannelFilter();
                 displayCleanedData();
                 showStatus('inputStatus', 'Current conversation row added. Add data to see historical records.', 'success');
                 return;
@@ -959,13 +1102,18 @@
                 // Add current conversation row
                 filteredData = addCurrentConversationRow(filteredData);
 
-                // Show time logic container after first evaluation
+                // Apply channel filter
+                applyChannelFilter();
+
+                // Show filters after first evaluation
                 showTimeLogicContainer();
+                showChannelFilter();
 
                 displayCleanedData();
                 const totalRecords = cleanedData.length;
                 const firstLineRecords = filteredData.length - 1; // Subtract 1 for current conversation row
-                showStatus('inputStatus', `Successfully processed ${totalRecords} records using ${detectedFormat}, showing ${firstLineRecords} "First Line" records + Current Conversation (${selectedTimeLogic}h logic)`, 'success');
+                const channelText = selectedChannel === 'All' ? 'all channels' : selectedChannel.toLowerCase() + ' channel';
+                showStatus('inputStatus', `Successfully processed ${totalRecords} records using ${detectedFormat}, showing ${firstLineRecords} "First Line" records (${channelText}) + Current Conversation (${selectedTimeLogic}h logic)`, 'success');
 
             } catch (error) {
                 console.error('Error cleaning data:', error);
@@ -981,7 +1129,7 @@
             
             tableBody.innerHTML = '';
             
-            filteredData.forEach(row => {
+            displayedData.forEach(row => {
                 const tr = document.createElement('tr');
                 
                 // Add special styling for current conversation row
@@ -994,6 +1142,7 @@
                     <td><span class="agent-name">${escapeHtml(row.agent)}</span></td>
                     <td><span class="location">${escapeHtml(row.location)}</span></td>
                     <td>${escapeHtml(row.department)}</td>
+                    <td><span class="channel-${row.channel.toLowerCase()}">${escapeHtml(row.channel)}</span></td>
                     <td><span class="survey-${row.potentialSurvey.toLowerCase().includes('yes') ? 'yes' : 'no'}">${escapeHtml(row.potentialSurvey)}</span></td>
                 `;
                 tableBody.appendChild(tr);
@@ -1003,8 +1152,8 @@
             emptyState.style.display = 'none';
             exportButtons.forEach(btn => btn.style.display = 'inline-flex');
             
-            const surveyYesCount = filteredData.filter(row => row.potentialSurvey.includes('Yes')).length;
-            const historicalRecords = filteredData.filter(row => !row.isCurrentConversation).length;
+            const surveyYesCount = displayedData.filter(row => row.potentialSurvey.includes('Yes')).length;
+            const historicalRecords = displayedData.filter(row => !row.isCurrentConversation).length;
             
             // Update survey warning status indicator
             updateSurveyWarning();
@@ -1027,41 +1176,46 @@
         }
 
         function exportCSV() {
-            if (filteredData.length === 0) return;
+            if (displayedData.length === 0) return;
             
-            const headers = ['Created', 'Agent Name', 'Location', 'Department', 'Potential Survey'];
+            const headers = ['Created', 'Agent Name', 'Location', 'Department', 'Channel', 'Potential Survey'];
             let csv = headers.join(',') + '\n';
             
-            filteredData.forEach(row => {
+            displayedData.forEach(row => {
                 const csvRow = [
                     `"${row.created}"`,
                     `"${row.agent}"`,
                     `"${row.location}"`,
                     `"${row.department}"`,
+                    `"${row.channel}"`,
                     `"${row.potentialSurvey}"`
                 ];
                 csv += csvRow.join(',') + '\n';
             });
             
-            downloadFile(csv, `first_line_data_${selectedTimeLogic}h.csv`, 'text/csv');
-            showStatus('outputStatus', `CSV file downloaded successfully (${selectedTimeLogic}h logic)`, 'success');
+            const channelSuffix = selectedChannel === 'All' ? 'all' : selectedChannel.toLowerCase();
+            downloadFile(csv, `first_line_data_${channelSuffix}_${selectedTimeLogic}h.csv`, 'text/csv');
+            showStatus('outputStatus', `CSV file downloaded successfully (${selectedChannel} channel, ${selectedTimeLogic}h logic)`, 'success');
         }
 
         function exportJSON() {
-            if (filteredData.length === 0) return;
+            if (displayedData.length === 0) return;
             
-            const exportData = filteredData.map(row => ({
+            const exportData = displayedData.map(row => ({
                 created: row.created,
                 agent: row.agent,
                 location: row.location,
                 department: row.department,
+                channel: row.channel,
                 potentialSurvey: row.potentialSurvey,
-                timeLogicUsed: selectedTimeLogic + ' hours'
+                timeLogicUsed: selectedTimeLogic + ' hours',
+                channelFilter: selectedChannel
             }));
             
             const json = JSON.stringify(exportData, null, 2);
-            downloadFile(json, `first_line_data_${selectedTimeLogic}h.json`, 'application/json');
-            showStatus('outputStatus', `JSON file downloaded successfully (${selectedTimeLogic}h logic)`, 'success');
+            const channelSuffix = selectedChannel === 'All' ? 'all' : selectedChannel.toLowerCase();
+            downloadFile(json, `first_line_data_${channelSuffix}_${selectedTimeLogic}h.json`, 'application/json');
+            showStatus('outputStatus', `JSON file downloaded successfully (${selectedChannel} channel, ${selectedTimeLogic}h logic)`, 'success');
         }
 
         function downloadFile(content, filename, contentType) {
@@ -1139,8 +1293,9 @@ Customer requesting refund for cancelled flight. Processing according to policy 
             
             // Show just the current conversation row when input is cleared
             filteredData = addCurrentConversationRow([]);
+            applyChannelFilter();
             displayCleanedData();
-            showStatus('inputStatus', `Input cleared - showing current conversation only (${selectedTimeLogic}h logic)`, 'success');
+            showStatus('inputStatus', `Input cleared - showing current conversation only (${selectedChannel} channel, ${selectedTimeLogic}h logic)`, 'success');
         }
 
         function handleTimeLogicChange() {
@@ -1171,8 +1326,30 @@ Customer requesting refund for cancelled flight. Processing according to policy 
                     filteredData = addCurrentConversationRow([]);
                 }
                 
+                applyChannelFilter();
                 displayCleanedData();
                 showStatus('inputStatus', `Survey logic updated to ${selectedTimeLogic} hours and data recalculated`, 'success');
+            }
+        }
+
+        function handleChannelChange(newChannel) {
+            selectedChannel = newChannel;
+            
+            // Update active state for channel buttons
+            document.querySelectorAll('.channel-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-channel="${selectedChannel}"]`).classList.add('active');
+            
+            // Update filter info
+            updateFilterInfo();
+            
+            // If there's data, refilter and redisplay
+            if (filteredData.length > 0) {
+                applyChannelFilter();
+                displayCleanedData();
+                const channelText = selectedChannel === 'All' ? 'all channels' : selectedChannel.toLowerCase() + ' channel';
+                showStatus('inputStatus', `Channel filter updated to show ${channelText}`, 'success');
             }
         }
 
@@ -1198,6 +1375,14 @@ Customer requesting refund for cancelled flight. Processing according to policy 
             });
         });
 
+        // Channel filter event listeners
+        document.querySelectorAll('.channel-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const channel = this.getAttribute('data-channel');
+                handleChannelChange(channel);
+            });
+        });
+
         // Allow Enter key to trigger cleaning
         document.getElementById('rawData').addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.key === 'Enter') {
@@ -1210,6 +1395,7 @@ Customer requesting refund for cancelled flight. Processing according to policy 
             updateFilterInfo();
             updateCurrentSetting();
             filteredData = addCurrentConversationRow([]);
+            applyChannelFilter();
             displayCleanedData();
         });
     </script>
