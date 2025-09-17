@@ -497,15 +497,16 @@
             document.getElementById('loadingIndicator').style.display = show ? 'block' : 'none';
         }
 
-        // Function to get current Pacific Standard Time
-        function getCurrentPacificTime() {
+        // Function to get current time in UTC-7 timezone
+        function getCurrentUTCMinus7Time() {
             const now = new Date();
-            const pacificTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Los_Angeles"}));
-            const year = pacificTime.getFullYear();
-            const month = String(pacificTime.getMonth() + 1).padStart(2, '0');
-            const day = String(pacificTime.getDate()).padStart(2, '0');
-            const hours = String(pacificTime.getHours()).padStart(2, '0');
-            const minutes = String(pacificTime.getMinutes()).padStart(2, '0');
+            // Convert to UTC-7 (PDT/PST)
+            const utcMinus7Time = new Date(now.getTime() - (7 * 60 * 60 * 1000));
+            const year = utcMinus7Time.getUTCFullYear();
+            const month = String(utcMinus7Time.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(utcMinus7Time.getUTCDate()).padStart(2, '0');
+            const hours = String(utcMinus7Time.getUTCHours()).padStart(2, '0');
+            const minutes = String(utcMinus7Time.getUTCMinutes()).padStart(2, '0');
             return `${year}-${month}-${day} ${hours}:${minutes}`;
         }
 
@@ -518,7 +519,7 @@
             let noteInitial = selectedChannel === 'voice' ? '1: Phone In' : '19: Chat';
             
             return {
-                'Created': getCurrentPacificTime(),
+                'Created': getCurrentUTCMinus7Time(),
                 'Agent': 'Current User ILO',
                 'Department': 'First Line',
                 'Note Initial': noteInitial,
@@ -708,42 +709,56 @@
             }
         }
 
-        // Function to calculate Potential Survey status including dynamic row
-        function calculatePotentialSurvey(data) {
-            // Sort data by Created date (ascending - oldest first)
-            const sortedData = [...data].sort((a, b) => {
-                const dateA = new Date(a.Created);
-                const dateB = new Date(b.Created);
-                return dateA - dateB;
+        // Function to calculate Potential Survey status separately for each channel
+        function calculatePotentialSurveyByChannel(data) {
+            // Group data by channel
+            const channelGroups = {};
+            data.forEach(record => {
+                const channel = record.Channel || 'Other';
+                if (!channelGroups[channel]) {
+                    channelGroups[channel] = [];
+                }
+                channelGroups[channel].push(record);
             });
 
-            let lastYesDate = null;
+            // Process each channel separately
+            Object.keys(channelGroups).forEach(channel => {
+                // Sort data by Created date (ascending - oldest first) for this channel
+                const sortedChannelData = channelGroups[channel].sort((a, b) => {
+                    const dateA = new Date(a.Created);
+                    const dateB = new Date(b.Created);
+                    return dateA - dateB;
+                });
 
-            for (let i = 0; i < sortedData.length; i++) {
-                const currentDate = new Date(sortedData[i].Created);
-                
-                if (i === 0) {
-                    // First row is always "Yes"
-                    sortedData[i]['Potential Survey'] = 'Yes';
-                    lastYesDate = currentDate;
-                } else {
-                    // Check if current row is 72 hours (3 days) or more after the last "Yes"
-                    const timeDiff = currentDate - lastYesDate;
-                    const hoursDiff = timeDiff / (1000 * 60 * 60); // Convert milliseconds to hours
+                let lastYesDate = null;
+
+                for (let i = 0; i < sortedChannelData.length; i++) {
+                    const currentDate = new Date(sortedChannelData[i].Created);
                     
-                    if (hoursDiff >= 72) {
-                        sortedData[i]['Potential Survey'] = 'Yes';
+                    if (i === 0) {
+                        // First row in each channel is always "Yes"
+                        sortedChannelData[i]['Potential Survey'] = 'Yes';
                         lastYesDate = currentDate;
                     } else {
-                        sortedData[i]['Potential Survey'] = 'No';
+                        // Check if current row is 72 hours (3 days) or more after the last "Yes" in this channel
+                        const timeDiff = currentDate - lastYesDate;
+                        const hoursDiff = timeDiff / (1000 * 60 * 60); // Convert milliseconds to hours
+                        
+                        if (hoursDiff >= 72) {
+                            sortedChannelData[i]['Potential Survey'] = 'Yes';
+                            lastYesDate = currentDate;
+                        } else {
+                            sortedChannelData[i]['Potential Survey'] = 'No';
+                        }
                     }
                 }
-            }
+            });
 
-            return sortedData;
+            // Flatten back to single array
+            return data;
         }
 
-        // Function to update survey status for visible rows only
+        // Function to update survey status for visible rows only (channel-specific)
         function updateSurveyStatusForVisibleRows() {
             const tbody = document.getElementById('tableBody');
             const visibleRows = Array.from(tbody.querySelectorAll('tr:not(.filtered-row)'));
@@ -762,50 +777,64 @@
                 };
             });
             
-            // Sort visible records by Created date (ascending - oldest first)
-            visibleRecords.sort((a, b) => {
-                const dateA = new Date(a.record.Created);
-                const dateB = new Date(b.record.Created);
-                return dateA - dateB;
+            // Group by channel
+            const channelGroups = {};
+            visibleRecords.forEach(item => {
+                const channel = item.record.Channel || 'Other';
+                if (!channelGroups[channel]) {
+                    channelGroups[channel] = [];
+                }
+                channelGroups[channel].push(item);
             });
-            
-            let lastYesDate = null;
+
             const surveyColumnIndex = tableHeaders.indexOf('Potential Survey');
             
-            // Update survey status for visible records
-            for (let i = 0; i < visibleRecords.length; i++) {
-                const currentDate = new Date(visibleRecords[i].record.Created);
-                let surveyStatus;
+            // Process each channel separately
+            Object.keys(channelGroups).forEach(channel => {
+                // Sort by Created date (ascending - oldest first) for this channel
+                channelGroups[channel].sort((a, b) => {
+                    const dateA = new Date(a.record.Created);
+                    const dateB = new Date(b.record.Created);
+                    return dateA - dateB;
+                });
+
+                let lastYesDate = null;
                 
-                if (i === 0) {
-                    // First visible row is always "Yes"
-                    surveyStatus = 'Yes';
-                    lastYesDate = currentDate;
-                } else {
-                    // Check if current row is 72 hours or more after the last "Yes"
-                    const timeDiff = currentDate - lastYesDate;
-                    const hoursDiff = timeDiff / (1000 * 60 * 60);
+                // Update survey status for this channel's visible records
+                for (let i = 0; i < channelGroups[channel].length; i++) {
+                    const currentDate = new Date(channelGroups[channel][i].record.Created);
+                    let surveyStatus;
                     
-                    if (hoursDiff >= 72) {
+                    if (i === 0) {
+                        // First visible row in each channel is always "Yes"
                         surveyStatus = 'Yes';
                         lastYesDate = currentDate;
                     } else {
-                        surveyStatus = 'No';
+                        // Check if current row is 72 hours or more after the last "Yes" in this channel
+                        const timeDiff = currentDate - lastYesDate;
+                        const hoursDiff = timeDiff / (1000 * 60 * 60);
+                        
+                        if (hoursDiff >= 72) {
+                            surveyStatus = 'Yes';
+                            lastYesDate = currentDate;
+                        } else {
+                            surveyStatus = 'No';
+                        }
+                    }
+                    
+                    // Update the record if not dynamic (dynamic row updates automatically)
+                    if (!channelGroups[channel][i].isDynamic) {
+                        allData[channelGroups[channel][i].originalIndex]['Potential Survey'] = surveyStatus;
+                    }
+                    
+                    // Update the cell in the table
+                    const cell = channelGroups[channel][i].rowElement.children[surveyColumnIndex];
+                    if (cell) {
+                        cell.textContent = surveyStatus;
+                        cell.className = surveyStatus === 'Yes' ? 'survey-yes' : 'survey-no';
                     }
                 }
-                
-                // Update the record if not dynamic (dynamic row updates automatically)
-                if (!visibleRecords[i].isDynamic) {
-                    allData[visibleRecords[i].originalIndex]['Potential Survey'] = surveyStatus;
-                }
-                
-                // Update the cell in the table
-                const cell = visibleRecords[i].rowElement.children[surveyColumnIndex];
-                if (cell) {
-                    cell.textContent = surveyStatus;
-                    cell.className = surveyStatus === 'Yes' ? 'survey-yes' : 'survey-no';
-                }
-            }
+            });
         }
 
         function convertToTable() {
@@ -845,8 +874,8 @@
                         throw new Error('No data could be extracted from the text');
                     }
                     
-                    // Calculate Potential Survey status
-                    data = calculatePotentialSurvey(data);
+                    // Calculate Potential Survey status by channel
+                    data = calculatePotentialSurveyByChannel(data);
                     
                     parsedData = data;
                     renderTable(data);
