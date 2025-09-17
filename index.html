@@ -15,6 +15,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            padding: 20px;
         }
 
         .container {
@@ -22,1196 +23,1296 @@
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
             overflow: hidden;
-        }
-        .sticky-header{
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: inherit;
-            border-bottom: #ffffff solid 3px;
-            border-radius: 12px;
+            backdrop-filter: blur(10px);
         }
 
         .header {
-            background: linear-gradient(135deg, #0e0aee 0%, #049da5 100%);
-            color: white;
-            padding: 5px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 30px;
             text-align: center;
-            border-radius: 12px;
+            color: white;
         }
-        
+
         .header h1 {
-            font-size: 1.2em;
-            margin-bottom: 2px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .header p {
-            font-size: 1.3em;
+            font-size: 1.1rem;
             opacity: 0.9;
         }
 
-        .survey-warning {
-            color: white;
-            padding: 20px;
-            margin: 0;
-            text-align: center;
-            font-weight: 600;
-            font-size: 2em;
-            display: none;
-        }
-
-        .survey-warning.show-yes {
-            display: block;
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            animation: surveyYesBlink 2s ease-in-out infinite alternate;
-        }
-
-        .survey-warning.show-no {
-            display: block;
-            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
-        }
-
-        @keyframes surveyYesBlink {
-            0% {
-                background: linear-gradient(135deg, #06f73e 0%, #ff2103 100%);
-                box-shadow: 0 0 30px rgba(40, 167, 69, 0.4);
-                transform: scale(1);
-            }
-            100% {
-                background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
-                box-shadow: 0 0 50px rgba(40, 167, 69, 0.8);
-                transform: scale(1.02);
-            }
-        }
-
-        @keyframes surveyNoBlink {
-            0% {
-                background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
-                box-shadow: 0 0 30px rgba(255, 193, 7, 0.4);
-                transform: scale(1);
-            }
-            100% {
-                background: linear-gradient(135deg, #fd7e14 0%, #e83e8c 100%);
-                box-shadow: 0 0 50px rgba(255, 193, 7, 0.8);
-                transform: scale(1.02);
-            }
-        }
-
         .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
             padding: 30px;
-            align-items: start;
         }
 
-        .input-section, .output-section {
-            display: flex;
-            flex-direction: column;
+        .input-section {
+            margin-bottom: 30px;
         }
 
-        .section-title {
-            font-size: 1.4em;
-            margin-bottom: 10px;
-            color: #333;
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
             font-weight: 600;
-            display: flex;
-            align-items: center;
+            color: #333;
+            font-size: 1.1rem;
         }
 
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 20px;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            margin-right: 10px;
-            border-radius: 2px;
-        }
-
-        .input-textarea {
+        textarea {
             width: 100%;
-            height: 400px;
-            padding: 20px;
+            min-height: 200px;
+            padding: 15px;
             border: 2px solid #e1e5e9;
             border-radius: 12px;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 13px;
-            line-height: 1.5;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
             resize: vertical;
             transition: all 0.3s ease;
+            background: #f8f9fa;
         }
 
-        .input-textarea:focus {
+        textarea:focus {
             outline: none;
             border-color: #4facfe;
             box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+            background: white;
         }
 
         .controls {
-            margin: 20px 0;
             display: flex;
             gap: 15px;
+            align-items: center;
             flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        select {
+            padding: 10px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #4facfe;
         }
 
         .btn {
             padding: 12px 24px;
             border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
-        }
-
-        .btn-primary1 {
-            background: linear-gradient(135deg, #e26906 0%, #fe0000ef 100%);
-            color: white;
-        }
-
-        .btn-primary1:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
 
         .btn-secondary {
-            background: #f8f9fa;
-            color: #495057;
-            border: 2px solid #e1e5e9;
-            display: none;
-        }
-
-        .btn-secondary:hover {
-            background: #e9ecef;
-            border-color: #adb5bd;
-        }
-
-        .btn-export {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
         }
 
-        .btn-export:hover {
+        .btn-secondary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(86, 171, 47, 0.3);
+            box-shadow: 0 10px 25px rgba(240, 147, 251, 0.3);
         }
 
-        .output-container {
-            border: 2px solid #e1e5e9;
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        /* New Channel Filter Buttons */
+        .channel-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .channel-filters label {
+            margin: 0;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .channel-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background: white;
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .channel-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .channel-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .output-section {
+            margin-top: 30px;
+        }
+
+        .table-container {
+            background: white;
             border-radius: 12px;
             overflow: hidden;
-            background: white;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-            max-height: 500px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-height: 600px;
+            overflow-y: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        thead {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            position: sticky;
-            top: 0;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #dee2e6;
+            font-size: 14px;
         }
 
         th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
             font-weight: 600;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
-        tr:hover {
-            background: rgba(79, 172, 254, 0.05);
+        .filtered-row {
+            display: none !important;
         }
 
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: top;
+        }
+
+        /* Survey column styling */
         .survey-yes {
-            color: #28a745;
+            background-color: #d4edda !important;
+            color: #155724;
             font-weight: bold;
         }
 
         .survey-no {
-            color: #dc3545;
-        }
-
-        .current-conversation {
-            background: rgba(255, 193, 7, 0.1);
-            font-weight: 500;
-        }
-
-        .status {
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-
-        .status.success {
-            background: rgba(40, 167, 69, 0.1);
-            color: #155724;
-            border: 1px solid rgba(40, 167, 69, 0.2);
-        }
-
-        .status.error {
-            background: rgba(220, 53, 69, 0.1);
+            background-color: #f8d7da !important;
             color: #721c24;
-            border: 1px solid rgba(220, 53, 69, 0.2);
+            font-weight: bold;
         }
 
-        .empty-state {
+        /* Dynamic row styling */
+        .dynamic-row {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%) !important;
+            border: 2px solid #4facfe !important;
+        }
+
+        .dynamic-row td {
+            font-weight: 600;
+            color: #2c5aa0;
+            border-bottom: 2px solid #4facfe;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tr:hover {
+            background: #e3f2fd;
+            transition: background-color 0.2s ease;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
             text-align: center;
-            padding: 60px 20px;
-            color: #6c757d;
+            min-width: 120px;
         }
 
-        .empty-state svg {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 16px;
-            opacity: 0.5;
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Survey Alert Card Styles */
+        .survey-alert-card {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 200px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .survey-alert-card.attention {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            animation: pulseAlert 2s infinite;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+        }
+
+        @keyframes pulseAlert {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 30px rgba(255, 107, 107, 0.6);
+            }
+        }
+
+        .survey-alert-text {
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .json-output {
+            background: #1e1e1e;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .success {
+            background: #51cf66;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
         }
 
         @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 20px;
-            }
-            
             .header h1 {
-                font-size: 1.5em;
+                font-size: 2rem;
             }
             
             .controls {
                 flex-direction: column;
+                align-items: stretch;
             }
             
             .btn {
+                padding: 15px;
+                margin: 5px 0;
+            }
+            
+            .stats {
                 justify-content: center;
             }
-        }
 
-        .filter-info {
-            background: rgba(79, 172, 254, 0.1);
-            color: #0c63e4;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            font-size: 14px;
-            border: 1px solid rgba(79, 172, 254, 0.2);
-            display: none;
-        }
-
-        .format-indicator {
-            background: rgba(138, 43, 226, 0.1);
-            color: #663399;
-            padding: 8px 12px;
-            border-radius: 6px;
-            margin: 5px 0;
-            font-size: 12px;
-            border: 1px solid rgba(138, 43, 226, 0.2);
-            font-weight: 500;
-            display: none;
-        }
-
-        /* Time Logic Toggle Styles */
-        .time-logic-container {
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid #e1e5e9;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            display: none;
-        }
-
-        .time-logic-title {
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-            display: none;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .time-logic-options {
-            display: none;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .time-option {
-            display: none;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .time-option:hover {
-            background: rgba(79, 172, 254, 0.05);
-        }
-
-        .time-option.active {
-            background: rgba(79, 172, 254, 0.1);
-            border-color: #4facfe;
-            display: none;
-        }
-
-        .time-option input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            margin: 0;
-            cursor: pointer;
-            display: none;
-        }
-
-        .time-option label {
-            font-size: 14px;
-            font-weight: 500;
-            color: #333;
-            cursor: pointer;
-            margin: 0;
-            display: none;
-        }
-
-        .time-logic-description {
-            margin-top: 10px;
-            font-size: 13px;
-            color: #6c757d;
-            line-height: 1.4;
-            display: none;
-        }
-
-        .current-setting {
-            background: rgba(40, 167, 69, 0.1);
-            color: #155724;
-            padding: 8px 12px;
-            border-radius: 6px;
-            margin: 10px 0;
-            font-size: 13px;
-            border: 1px solid rgba(40, 167, 69, 0.2);
-            font-weight: 500;
-            display: none;
-        }
-
-        .agent-name {
-            font-weight: 500;
-            color: #495057;
-        }
-
-        .location {
-            font-size: 0.9em;
-            color: #6c757d;
-            font-style: italic;
+            .channel-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .survey-alert-card attention{
+                display: block;
+            }
+            .survey-alert-card{
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="sticky-header">
-        <div class="header" id="headerElement">
-            <h1>📊 Survey Evaluator</h1>
-        </div>
-        
-        <div class="survey-warning" id="surveyWarning">
-            ⚠️ Survey will be generated - Careful
-        </div>
-    </div>
     <div class="container">
+        <div class="header">
+            <h1>Survey Evaluator</h1>
+        </div>
+
         <div class="main-content">
             <div class="input-section">
-                <h2 class="section-title">Paste Errand Notes here</h2>
-                <div id="inputStatus"></div>
-                <textarea 
-                    id="rawData" 
-                    class="input-textarea" 
-                    placeholder="Paste your unstructured data here...&#10;&#10;Supports both formats:&#10;&#10;Format 1: 181-11104 2025-01-20 11:57 N/A Pending Provider...&#10;&#10;Format 2: &#10;2025-09-05 13:27&#10;Klodian Hasa&#10;Athens&#10;First Line&#10;1: Phone In / 1: Rebooking..."
-                ></textarea>
-                
+                <div class="input-group">
+                    <label for="textInput">Paste your unstructured text here:</label>
+                    <textarea id="textInput" placeholder="Paste your text data here... The converter will automatically detect patterns and structure."></textarea>
+                </div>
+
                 <div class="controls">
-                    <button id="cleanData" class="btn btn-primary">
-                        🔄 Generate Results
-                    </button>
-                    <button id="clearInput" class="btn btn-primary1">
-                        🗑️ Clear Input
-                    </button>
-                    <button id="sampleData1" class="btn btn-secondary">
-                        📋 Sample Format 1
-                    </button>
-                    <button id="sampleData2" class="btn btn-secondary">
-                        📋 Sample Format 2
-                    </button>
+                    <label for="parseMode">Parsing Mode:</label>
+                    <select id="parseMode">
+                        <option value="auto">Auto-detect</option>
+                        <option value="structured">Structured Data</option>
+                        <option value="tabular">Tabular Format</option>
+                        <option value="keyvalue">Key-Value Pairs</option>
+                        <option value="custom">Custom Delimiters</option>
+                    </select>
+
+                    <button class="btn btn-primary" onclick="convertToTable()">Convert to Table</button>
+                    <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+                    <button class="btn btn-success" onclick="exportData()">Export JSON</button>
                 </div>
 
-                <!-- Time Logic Toggle Section -->
-                <div class="time-logic-container" id="timeLogicContainer" style="display: none;">
-                    <div class="time-logic-title">
-                        ⏰ Survey Time Logic Settings
-                    </div>
-                    <div class="time-logic-options">
-                        <div class="time-option active" data-hours="72">
-                            <input type="radio" id="time72" name="timeLogic" value="72" checked>
-                            <label for="time72">72 Hours</label>
-                        </div>
-                        <div class="time-option" data-hours="96">
-                            <input type="radio" id="time96" name="timeLogic" value="96">
-                            <label for="time96">96 Hours</label>
-                        </div>
-                    </div>
-                    <div class="time-logic-description">
-                        Select the time interval for survey eligibility logic. A survey is eligible ("Yes") if it's been more than the selected hours since the last eligible survey.
-                    </div>
-                    <div id="currentSetting" class="current-setting">
-                        ✅ Currently using 72-hour logic
-                    </div>
-                </div>
-
-                <div id="formatIndicator"></div>
+                <div class="error" id="errorMessage"></div>
+                <div class="success" id="successMessage"></div>
             </div>
 
-            <div class="output-section">
-                <h2 class="section-title">Evaluated Results</h2>
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Processing your data...</p>
+            </div>
+
+            <div class="output-section" id="outputSection" style="display: none;">
+                <div class="stats" id="statsSection"></div>
                 
-                <div class="filter-info" id="filterInfo">
-                    ℹ️ Showing only records from "First Line" department with 72-hour survey logic + Current Conversation
+                <!-- New Channel Filter Buttons -->
+                <div class="channel-filters" id="channelFilters" style="display: none;">
+                    <label>Filter by Channel:</label>
+                    <button class="channel-btn" onclick="filterByChannel('voice')" id="voiceBtn">Voice</button>
+                    <button class="channel-btn active" onclick="filterByChannel('chat')" id="chatBtn">Chat</button>
+                </div>
+                
+                <div class="table-container" id="tableContainer">
+                    <table id="resultTable">
+                        <thead id="tableHeader"></thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
                 </div>
 
-                <div class="output-container">
-                    <div class="table-wrapper">
-                        <table id="outputTable" style="display: none;">
-                            <thead>
-                                <tr>
-                                    <th>Created</th>
-                                    <th>Agent Name</th>
-                                    <th>Location</th>
-                                    <th>Department</th>
-                                    <th>Potential Survey</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                            </tbody>
-                        </table>
-                        <div id="emptyState" class="empty-state">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                            </svg>
-                            <h3>No data to display</h3>
-                            <p>Paste your raw data and click "Clean & Structure Data" to get started</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="controls">
-                    <button id="exportCSV" class="btn btn-export" style="display: none;">
-                        💾 Export as CSV
-                    </button>
-                    <button id="exportJSON" class="btn btn-export" style="display: none;">
-                        📄 Export as JSON
-                    </button>
-                </div>
-
-                <div id="outputStatus"></div>
+                <div class="json-output" id="jsonOutput" style="display: none;"></div>
             </div>
         </div>
     </div>
 
     <script>
-        let cleanedData = [];
-        let filteredData = [];
-        let detectedFormat = '';
-        let selectedTimeLogic = 72; // Default to 72 hours
+        let parsedData = [];
+        let tableHeaders = [];
+        let activeFilters = {};
+        let allData = [];
+        let selectedChannel = 'chat'; // Single selection, Chat by default
 
-        function updateSurveyWarning() {
-            const surveyWarning = document.getElementById('surveyWarning');
-            
-            // Only apply logic if we have 2 or more rows in the table
-            if (filteredData.length < 2) {
-                surveyWarning.classList.remove('show-yes', 'show-no');
-                return;
-            }
-            
-            // Find the current conversation row
-            const currentConversationRow = filteredData.find(row => row.isCurrentConversation);
-            
-            if (currentConversationRow) {
-                const willGenerateSurvey = currentConversationRow.potentialSurvey.includes('Yes');
-                
-                // Reset classes
-                surveyWarning.classList.remove('show-yes', 'show-no');
-                
-                if (willGenerateSurvey) {
-                    // Show warning with intense blinking for survey generation
-                    surveyWarning.textContent = '⚠️ Survey will be generated - Careful';
-                    surveyWarning.classList.add('show-yes');
-                } else {
-                    // Show no survey message with blinking
-                    surveyWarning.textContent = 'No Survey will be Triggered';
-                    surveyWarning.classList.add('show-no');
-                }
-            } else {
-                // Reset to hidden state if no current conversation found
-                surveyWarning.classList.remove('show-yes', 'show-no');
-            }
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            setTimeout(() => errorEl.style.display = 'none', 5000);
         }
 
-        function showStatus(elementId, message, type) {
-            const element = document.getElementById(elementId);
-            element.innerHTML = `<div class="status ${type}">${message}</div>`;
-            setTimeout(() => {
-                element.innerHTML = '';
-            }, 5000);
+        function showSuccess(message) {
+            const successEl = document.getElementById('successMessage');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+            setTimeout(() => successEl.style.display = 'none', 3000);
         }
 
-        function showFormatIndicator(format) {
-            const element = document.getElementById('formatIndicator');
-            element.innerHTML = `<div class="format-indicator">🔍 Detected Format: ${format}</div>`;
+        function showLoading(show) {
+            document.getElementById('loadingIndicator').style.display = show ? 'block' : 'none';
         }
 
-        function updateFilterInfo() {
-            const element = document.getElementById('filterInfo');
-            element.innerHTML = `ℹ️ Showing only records from "First Line" department with ${selectedTimeLogic}-hour survey logic + Current Conversation`;
-        }
-
-        function updateCurrentSetting() {
-            const element = document.getElementById('currentSetting');
-            element.innerHTML = `✅ Currently using ${selectedTimeLogic}-hour logic`;
-        }
-
-        function showTimeLogicContainer() {
-            const container = document.getElementById('timeLogicContainer');
-            container.style.display = 'none';
-        }
-
-        function getCurrentDateTime() {
+        // Function to get current Pacific Standard Time
+        function getCurrentPacificTime() {
             const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            
+            const pacificTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Los_Angeles"}));
+            const year = pacificTime.getFullYear();
+            const month = String(pacificTime.getMonth() + 1).padStart(2, '0');
+            const day = String(pacificTime.getDate()).padStart(2, '0');
+            const hours = String(pacificTime.getHours()).padStart(2, '0');
+            const minutes = String(pacificTime.getMinutes()).padStart(2, '0');
             return `${year}-${month}-${day} ${hours}:${minutes}`;
         }
 
-        function detectDataFormat(rawData) {
-            const lines = rawData.split('\n').filter(line => line.trim());
+        // Function to create dynamic row based on current filters
+        function createDynamicRow() {
+            // Determine channel based on single selection
+            let channel = selectedChannel === 'voice' ? 'Voice' : 'Chat';
             
-            // Check for Format 2 characteristics
-            // Look for patterns like date on its own line followed by name/location info
-            let format2Indicators = 0;
-            let format1Indicators = 0;
-            
-            for (let i = 0; i < Math.min(lines.length, 20); i++) {
-                const line = lines[i].trim();
-                
-                // Format 2 indicators: standalone date, name patterns, department on own line
-                if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(line)) {
-                    format2Indicators += 2;
-                }
-                if (/^[A-Z][a-z]+ [A-Z][a-z]+$/.test(line)) {
-                    format2Indicators += 1;
-                }
-                if (/^(First Line|Second Line|N\/A)$/.test(line)) {
-                    format2Indicators += 2;
-                }
-                
-                // Format 1 indicators: reference number at start, everything on one line
-                if (/^\d{3}-\d{5,8}\s+\d{4}-\d{2}-\d{2}/.test(line)) {
-                    format1Indicators += 2;
-                }
-                if (line.includes('First Line') && line.includes('2025-') && line.length > 50) {
-                    format1Indicators += 1;
-                }
-            }
-            
-            return format2Indicators > format1Indicators ? 'Format 2' : 'Format 1';
-        }
-
-        function parseFormat1Line(line) {
-            // Original parsing logic for format 1 with agent and location extraction
-            line = line.trim().replace(/\s+/g, ' ');
-            
-            if (!line) return null;
-
-            const refMatch = line.match(/^(\d{3}-\d{5,8})/);
-            const reference = refMatch ? refMatch[1] : '';
-            
-            const dateMatch = line.match(/(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})/);
-            const created = dateMatch ? dateMatch[1] : '';
-            
-            const departments = ['First Line', 'Second Line', 'N/A', 'System Internal'];
-            let department = 'N/A';
-            for (const dept of departments) {
-                if (line.includes(dept)) {
-                    department = dept;
-                    break;
-                }
-            }
-            
-            let title = '';
-            const titlePatterns = [
-                /(?:CANCEL|Pending Provider Booking Started|CXL Conf Cancellation Guarantee|Backend BOM|Chat.*?refund)/i
-            ];
-            
-            for (const pattern of titlePatterns) {
-                const match = line.match(pattern);
-                if (match) {
-                    title = match[0];
-                    break;
-                }
-            }
-            
-            if (!title) {
-                const parts = line.split(/\s+/);
-                for (let i = 0; i < parts.length; i++) {
-                    if (parts[i] && parts[i][0] === parts[i][0].toUpperCase() && parts[i].length > 2) {
-                        if (!reference.includes(parts[i]) && !created.includes(parts[i]) && !department.includes(parts[i])) {
-                            title = parts[i];
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            let note = line;
-            if (reference) note = note.replace(reference, '').trim();
-            if (created) note = note.replace(created, '').trim();
-            if (department && department !== 'N/A') note = note.replace(department, '').trim();
-            if (title) note = note.replace(title, '').trim();
-            
-            note = note.replace(/^\s*[-:]\s*/, '').trim();
+            // Determine Note Initial based on channel
+            let noteInitial = selectedChannel === 'voice' ? '1: Phone In' : '19: Chat';
             
             return {
-                reference: reference || generateReference(),
-                created: created || new Date().toISOString().slice(0, 16).replace('T', ' '),
-                department: department,
-                title: title || 'Unknown',
-                note: note || 'No additional information',
-                agent: 'N/A', // Format 1 doesn't typically have agent info
-                location: 'N/A' // Format 1 doesn't typically have location info
+                'Created': getCurrentPacificTime(),
+                'Agent': 'Current User ILO',
+                'Department': 'First Line',
+                'Note Initial': noteInitial,
+                'Notes': 'null',
+                'Channel': channel,
+                'Potential Survey': '' // Will be calculated by existing logic
             };
         }
 
-        function parseFormat2Data(rawData) {
-            const lines = rawData.split('\n');
+        function parseStructuredText(text) {
+            const lines = text.trim().split('\n').filter(line => line.trim());
             const records = [];
-            let i = 0;
+            let currentRecord = {};
+            let recordStartPattern = /^\d{4}-\d{2}-\d{2}/; // Date pattern
 
-            while (i < lines.length) {
+            for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
                 
-                // Skip empty lines and "X more lines" indicators
-                if (!line || /^\d+ more lines?$/.test(line)) {
-                    i++;
-                    continue;
-                }
+                if (!line) continue;
 
-                // Look for date pattern
-                const dateMatch = line.match(/^(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})/);
-                if (dateMatch) {
-                    const created = dateMatch[1];
-                    let agent = 'N/A';
-                    let location = 'N/A';
-                    let department = 'N/A';
-                    let title = '';
-                    let note = '';
-
-                    i++; // Move to next line
-
-                    // Parse agent name (should be next line)
-                    if (i < lines.length && lines[i].trim()) {
-                        const agentLine = lines[i].trim();
-                        // Check if it looks like a name (2+ words, first letters capitalized)
-                        if (/^[A-Z][a-z]+(\s+[A-Z][a-z]+)+$/.test(agentLine)) {
-                            agent = agentLine;
-                            i++;
-                        }
+                // Check if this line starts a new record
+                if (recordStartPattern.test(line)) {
+                    // Save previous record if it exists
+                    if (Object.keys(currentRecord).length > 0) {
+                        // Add Channel column before saving
+                        currentRecord.Channel = determineChannel(currentRecord['Note Initial'] || '');
+                        records.push({...currentRecord});
                     }
-
-                    // Parse location (next line if present)
-                    if (i < lines.length && lines[i].trim()) {
-                        const locationLine = lines[i].trim();
-                        // If it's not a known department, treat as location
-                        if (!['First Line', 'Second Line', 'N/A', 'System Internal'].includes(locationLine)) {
-                            location = locationLine;
-                            i++;
-                        }
-                    }
-
-                    // Parse department (should be next)
-                    if (i < lines.length && lines[i].trim()) {
-                        const deptLine = lines[i].trim();
-                        if (['First Line', 'Second Line', 'N/A', 'System Internal'].includes(deptLine)) {
-                            department = deptLine;
-                            i++;
-                        }
-                    }
-
-                    // Parse title and note (everything else until next date or end)
-                    let titleLines = [];
-                    let noteLines = [];
-                    let inNote = false;
-
-                    while (i < lines.length) {
-                        const currentLine = lines[i].trim();
+                    
+                    // Start new record
+                    currentRecord = {};
+                    
+                    // Parse the date and initial info
+                    const parts = line.split(/\s+/);
+                    currentRecord.Created = parts[0] + ' ' + parts[1];
+                    
+                    // Look for agent name in next lines
+                    let j = i + 1;
+                    while (j < lines.length && !lines[j].match(recordStartPattern) && j < i + 10) {
+                        const nextLine = lines[j].trim();
                         
-                        // Stop if we hit another date or "X more lines"
-                        if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}/.test(currentLine) || /^\d+ more lines?$/.test(currentLine)) {
+                        if (nextLine && !nextLine.includes(':') && !nextLine.includes('First Line') && 
+                            !nextLine.includes('Email sent') && nextLine.length > 2 && nextLine.length < 50) {
+                            currentRecord.Agent = nextLine;
                             break;
                         }
-
-                        if (!currentLine) {
-                            i++;
-                            continue;
-                        }
-
-                        // Heuristic: if line starts with numbers and colons, it's likely title
-                        // if it's longer descriptive text, it's likely note
-                        if (/^\d+:/.test(currentLine) || currentLine.includes('Payment link') || currentLine.includes('CANCEL')) {
-                            if (!inNote) titleLines.push(currentLine);
-                        } else if (currentLine.includes('Note:') || currentLine.includes('Errand case') || 
-                                 currentLine.includes('Customer contact') || currentLine.includes('https://')) {
-                            inNote = true;
-                            noteLines.push(currentLine);
-                        } else if (inNote) {
-                            noteLines.push(currentLine);
-                        } else if (titleLines.length === 0) {
-                            titleLines.push(currentLine);
-                        } else {
-                            noteLines.push(currentLine);
-                        }
-
-                        i++;
+                        j++;
                     }
-
-                    title = titleLines.join(' | ').trim() || 'Unknown';
-                    note = noteLines.join(' ').trim() || 'No additional information';
-
-                    records.push({
-                        reference: generateReference(),
-                        created: created,
-                        department: department,
-                        title: title,
-                        note: note,
-                        agent: agent,
-                        location: location
-                    });
-                } else {
-                    i++;
+                    
+                } else if (line.includes('First Line')) {
+                    currentRecord.Department = 'First Line';
+                    // Extract location if present
+                    const locationMatch = line.match(/^([^,]+),?\s*First Line/);
+                    if (locationMatch) {
+                        currentRecord.Location = locationMatch[1].trim();
+                    }
+                    
+                } else if (line.includes(':') && line.includes('/')) {
+                    // This looks like a title/category line
+                    if (!currentRecord['Note Initial']) {
+                        currentRecord['Note Initial'] = line;
+                    }
+                    
+                } else if (line.length > 20 && !line.includes('http') && !line.includes('more lines')) {
+                    // This looks like a note
+                    if (!currentRecord.Notes) {
+                        currentRecord.Notes = line;
+                    } else {
+                        currentRecord.Notes += ' ' + line;
+                    }
                 }
+            }
+
+            // Don't forget the last record
+            if (Object.keys(currentRecord).length > 0) {
+                currentRecord.Channel = determineChannel(currentRecord['Note Initial'] || '');
+                records.push(currentRecord);
             }
 
             return records;
         }
 
-        function generateReference() {
-            return Math.floor(Math.random() * 900 + 100) + '-' + Math.floor(Math.random() * 90000 + 10000);
+        function determineChannel(noteInitial) {
+            if (noteInitial.includes('19: Chat')) {
+                return 'Chat';
+            } else if (noteInitial.includes('1: Phone In')) {
+                return 'Voice';
+            } else {
+                return 'Other';
+            }
         }
 
-        function calculatePotentialSurvey(data) {
-            if (data.length === 0) return data;
+        function parseTabularData(text) {
+            const lines = text.trim().split('\n').filter(line => line.trim());
+            const records = [];
             
-            const sortedData = [...data].sort((a, b) => new Date(a.created) - new Date(b.created));
+            // Try to detect column separators
+            const separators = ['\t', '|', ',', ';'];
+            let bestSeparator = '\t';
+            let maxColumns = 0;
             
-            sortedData[0].potentialSurvey = 'Yes';
-            let lastYesDate = new Date(sortedData[0].created);
-            
-            for (let i = 1; i < sortedData.length; i++) {
-                const currentDate = new Date(sortedData[i].created);
-                const timeDifferenceHours = (currentDate - lastYesDate) / (1000 * 60 * 60);
-                
-                if (timeDifferenceHours >= selectedTimeLogic) {
-                    sortedData[i].potentialSurvey = 'Yes';
-                    lastYesDate = currentDate;
-                } else {
-                    sortedData[i].potentialSurvey = 'No';
+            for (const sep of separators) {
+                const testLine = lines[0];
+                const cols = testLine.split(sep).length;
+                if (cols > maxColumns) {
+                    maxColumns = cols;
+                    bestSeparator = sep;
                 }
             }
             
+            // Parse headers
+            const headers = lines[0].split(bestSeparator).map(h => h.trim()).filter(h => h);
+            
+            // Parse data rows
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(bestSeparator).map(v => v.trim());
+                if (values.length >= headers.length - 1) {
+                    const record = {};
+                    headers.forEach((header, index) => {
+                        record[header] = values[index] || '';
+                    });
+                    // Add Channel column
+                    record.Channel = determineChannel(record['Note Initial'] || '');
+                    records.push(record);
+                }
+            }
+            
+            return records;
+        }
+
+        function parseKeyValueData(text) {
+            const lines = text.trim().split('\n').filter(line => line.trim());
+            const records = [];
+            let currentRecord = {};
+            
+            for (const line of lines) {
+                if (line.includes(':')) {
+                    const colonIndex = line.indexOf(':');
+                    const key = line.substring(0, colonIndex).trim();
+                    const value = line.substring(colonIndex + 1).trim();
+                    
+                    if (key && value) {
+                        currentRecord[key] = value;
+                    }
+                } else if (line.trim() === '' || line.includes('---')) {
+                    // Empty line or separator - end current record
+                    if (Object.keys(currentRecord).length > 0) {
+                        // Add Channel column
+                        currentRecord.Channel = determineChannel(currentRecord['Note Initial'] || '');
+                        records.push({...currentRecord});
+                        currentRecord = {};
+                    }
+                }
+            }
+            
+            // Don't forget the last record
+            if (Object.keys(currentRecord).length > 0) {
+                currentRecord.Channel = determineChannel(currentRecord['Note Initial'] || '');
+                records.push(currentRecord);
+            }
+            
+            return records;
+        }
+
+        function autoDetectFormat(text) {
+            const lines = text.trim().split('\n');
+            
+            // Check for structured format (like the test data)
+            const datePattern = /^\d{4}-\d{2}-\d{2}/;
+            const hasDatePattern = lines.some(line => datePattern.test(line.trim()));
+            
+            // Check for tabular format
+            const hasTabSeparator = lines.some(line => line.includes('\t'));
+            const hasPipeSeparator = lines.some(line => line.includes('|'));
+            
+            // Check for key-value format
+            const hasKeyValue = lines.filter(line => line.includes(':')).length > lines.length * 0.3;
+            
+            if (hasDatePattern) {
+                return 'structured';
+            } else if (hasTabSeparator || hasPipeSeparator) {
+                return 'tabular';
+            } else if (hasKeyValue) {
+                return 'keyvalue';
+            } else {
+                return 'structured'; // Default fallback
+            }
+        }
+
+        // Function to calculate Potential Survey status including dynamic row
+        function calculatePotentialSurvey(data) {
+            // Sort data by Created date (ascending - oldest first)
+            const sortedData = [...data].sort((a, b) => {
+                const dateA = new Date(a.Created);
+                const dateB = new Date(b.Created);
+                return dateA - dateB;
+            });
+
+            let lastYesDate = null;
+
+            for (let i = 0; i < sortedData.length; i++) {
+                const currentDate = new Date(sortedData[i].Created);
+                
+                if (i === 0) {
+                    // First row is always "Yes"
+                    sortedData[i]['Potential Survey'] = 'Yes';
+                    lastYesDate = currentDate;
+                } else {
+                    // Check if current row is 72 hours (3 days) or more after the last "Yes"
+                    const timeDiff = currentDate - lastYesDate;
+                    const hoursDiff = timeDiff / (1000 * 60 * 60); // Convert milliseconds to hours
+                    
+                    if (hoursDiff >= 72) {
+                        sortedData[i]['Potential Survey'] = 'Yes';
+                        lastYesDate = currentDate;
+                    } else {
+                        sortedData[i]['Potential Survey'] = 'No';
+                    }
+                }
+            }
+
             return sortedData;
         }
 
-        function addCurrentConversationRow(data) {
-            if (data.length === 0) {
-                // If no data, current conversation is always "Yes"
-                return [{
-                    created: getCurrentDateTime(),
-                    department: 'First Line',
-                    agent: 'Current User',
-                    location: 'Iloilo',
-                    potentialSurvey: 'Yes - (Current Conversation)',
-                    isCurrentConversation: true
-                }];
-            }
+        // Function to update survey status for visible rows only
+        function updateSurveyStatusForVisibleRows() {
+            const tbody = document.getElementById('tableBody');
+            const visibleRows = Array.from(tbody.querySelectorAll('tr:not(.filtered-row)'));
             
-            // Get the last record's date
-            const sortedData = [...data].sort((a, b) => new Date(a.created) - new Date(b.created));
-            const lastRecord = sortedData[sortedData.length - 1];
-            const lastYesRecord = sortedData.slice().reverse().find(record => record.potentialSurvey === 'Yes');
+            if (visibleRows.length === 0) return;
             
-            const currentDateTime = getCurrentDateTime();
-            const currentDate = new Date(currentDateTime);
+            // Get visible records in the order they appear
+            const visibleRecords = visibleRows.map(row => {
+                const index = parseInt(row.getAttribute('data-index'));
+                const isDynamic = row.classList.contains('dynamic-row');
+                return { 
+                    record: isDynamic ? createDynamicRow() : allData[index], 
+                    rowElement: row, 
+                    originalIndex: index,
+                    isDynamic: isDynamic
+                };
+            });
             
-            let surveyStatus = 'No';
+            // Sort visible records by Created date (ascending - oldest first)
+            visibleRecords.sort((a, b) => {
+                const dateA = new Date(a.record.Created);
+                const dateB = new Date(b.record.Created);
+                return dateA - dateB;
+            });
             
-            // Check against the last "Yes" record, not just the last record
-            if (lastYesRecord) {
-                const lastYesDate = new Date(lastYesRecord.created);
-                const timeDifferenceHours = (currentDate - lastYesDate) / (1000 * 60 * 60);
+            let lastYesDate = null;
+            const surveyColumnIndex = tableHeaders.indexOf('Potential Survey');
+            
+            // Update survey status for visible records
+            for (let i = 0; i < visibleRecords.length; i++) {
+                const currentDate = new Date(visibleRecords[i].record.Created);
+                let surveyStatus;
                 
-                if (timeDifferenceHours >= selectedTimeLogic) {
+                if (i === 0) {
+                    // First visible row is always "Yes"
                     surveyStatus = 'Yes';
+                    lastYesDate = currentDate;
+                } else {
+                    // Check if current row is 72 hours or more after the last "Yes"
+                    const timeDiff = currentDate - lastYesDate;
+                    const hoursDiff = timeDiff / (1000 * 60 * 60);
+                    
+                    if (hoursDiff >= 72) {
+                        surveyStatus = 'Yes';
+                        lastYesDate = currentDate;
+                    } else {
+                        surveyStatus = 'No';
+                    }
                 }
-            } else {
-                // If no "Yes" records found, default to "Yes" for current conversation
-                surveyStatus = 'Yes';
+                
+                // Update the record if not dynamic (dynamic row updates automatically)
+                if (!visibleRecords[i].isDynamic) {
+                    allData[visibleRecords[i].originalIndex]['Potential Survey'] = surveyStatus;
+                }
+                
+                // Update the cell in the table
+                const cell = visibleRecords[i].rowElement.children[surveyColumnIndex];
+                if (cell) {
+                    cell.textContent = surveyStatus;
+                    cell.className = surveyStatus === 'Yes' ? 'survey-yes' : 'survey-no';
+                }
             }
-            
-            // Add current conversation row
-            const currentConversationRow = {
-                created: currentDateTime,
-                department: 'First Line',
-                agent: 'Current User',
-                location: 'Iloilo',
-                potentialSurvey: `${surveyStatus} - (Current Conversation)`,
-                isCurrentConversation: true
-            };
-            
-            return [...data, currentConversationRow];
         }
 
-        function cleanData() {
-            const rawData = document.getElementById('rawData').value.trim();
+        function convertToTable() {
+            const text = document.getElementById('textInput').value.trim();
+            const parseMode = document.getElementById('parseMode').value;
             
-            // Always show current conversation row, even if no input data
-            if (!rawData) {
-                // Create just the current conversation row
-                filteredData = addCurrentConversationRow([]);
-                displayCleanedData();
-                showStatus('inputStatus', 'Current conversation row added. Add data to see historical records.', 'success');
+            if (!text) {
+                showError('Please enter some text to convert');
                 return;
             }
 
-            try {
-                // Detect format
-                detectedFormat = detectDataFormat(rawData);
-                showFormatIndicator(detectedFormat);
+            showLoading(true);
+            
+            setTimeout(() => {
+                try {
+                    let detectedMode = parseMode;
+                    if (parseMode === 'auto') {
+                        detectedMode = autoDetectFormat(text);
+                    }
+                    
+                    let data = [];
+                    switch (detectedMode) {
+                        case 'structured':
+                            data = parseStructuredText(text);
+                            break;
+                        case 'tabular':
+                            data = parseTabularData(text);
+                            break;
+                        case 'keyvalue':
+                            data = parseKeyValueData(text);
+                            break;
+                        default:
+                            data = parseStructuredText(text);
+                    }
+                    
+                    if (data.length === 0) {
+                        throw new Error('No data could be extracted from the text');
+                    }
+                    
+                    // Calculate Potential Survey status
+                    data = calculatePotentialSurvey(data);
+                    
+                    parsedData = data;
+                    renderTable(data);
+                    showSuccess(`Successfully parsed ${data.length} records using ${detectedMode} mode`);
+                    
+                } catch (error) {
+                    showError('Error parsing text: ' + error.message);
+                } finally {
+                    showLoading(false);
+                }
+            }, 500);
+        }
 
-                cleanedData = [];
+        function renderTable(data) {
+            if (!data || data.length === 0) return;
+            
+            // Store all data for filtering
+            allData = [...data];
+            
+            // Extract all unique headers and ensure Potential Survey is last
+            const headers = [...new Set(data.flatMap(record => Object.keys(record)))];
+            
+            // Move Potential Survey to the end if it exists
+            const surveyIndex = headers.indexOf('Potential Survey');
+            if (surveyIndex > -1) {
+                headers.splice(surveyIndex, 1);
+                headers.push('Potential Survey');
+            }
+            
+            tableHeaders = headers;
+            
+            // Render simple table header without filter dropdowns
+            const headerRow = document.getElementById('tableHeader');
+            headerRow.innerHTML = '<tr>' + headers.map(header => 
+                `<th>${header}</th>`
+            ).join('') + '</tr>';
+            
+            // Render table body
+            renderTableBody(data);
+            
+            // Set default filters (behind the scenes)
+            setDefaultFilters();
+            
+            // Show channel filter buttons if Channel column exists
+            if (headers.includes('Channel')) {
+                document.getElementById('channelFilters').style.display = 'flex';
+            }
+            
+            // Show statistics
+            renderStats(data, headers);
+            
+            // Show output section
+            document.getElementById('outputSection').style.display = 'block';
+            
+            // Apply filters and update survey status
+            applyAllFilters();
+        }
 
-                if (detectedFormat === 'Format 2') {
-                    // Use new parsing logic for format 2
-                    cleanedData = parseFormat2Data(rawData);
-                } else {
-                    // Use original parsing logic for format 1
-                    const lines = rawData.split('\n').filter(line => line.trim());
-                    for (const line of lines) {
-                        const parsed = parseFormat1Line(line);
-                        if (parsed) {
-                            cleanedData.push(parsed);
+        function renderTableBody(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            data.forEach((record, index) => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-index', index);
+                
+                tableHeaders.forEach(header => {
+                    const cell = document.createElement('td');
+                    const value = record[header] || '';
+                    
+                    // Special styling for Potential Survey column
+                    if (header === 'Potential Survey') {
+                        cell.textContent = value;
+                        cell.className = value === 'Yes' ? 'survey-yes' : 'survey-no';
+                    } else {
+                        // Format long text for other columns
+                        if (value.length > 100) {
+                            cell.innerHTML = `<span title="${value}">${value.substring(0, 100)}...</span>`;
+                        } else {
+                            cell.textContent = value;
                         }
                     }
-                }
+                    
+                    row.appendChild(cell);
+                });
+                tbody.appendChild(row);
+            });
+            
+            // Add dynamic row at the end
+            addDynamicRow();
+        }
 
-                // Filter to only show "First Line" department records
-                filteredData = cleanedData.filter(record => record.department === 'First Line');
+        function addDynamicRow() {
+            const tbody = document.getElementById('tableBody');
+            const dynamicRecord = createDynamicRow();
+            
+            const row = document.createElement('tr');
+            row.classList.add('dynamic-row');
+            row.setAttribute('data-dynamic', 'true');
+            
+            tableHeaders.forEach(header => {
+                const cell = document.createElement('td');
+                const value = dynamicRecord[header] || '';
                 
-                // Apply potential survey logic to filtered data
-                if (filteredData.length > 0) {
-                    filteredData = calculatePotentialSurvey(filteredData);
+                // Special styling for Potential Survey column
+                if (header === 'Potential Survey') {
+                    // Survey status will be calculated by updateSurveyStatusForVisibleRows
+                    cell.textContent = '';
+                    cell.className = '';
+                } else {
+                    cell.textContent = value;
                 }
+                
+                row.appendChild(cell);
+            });
+            
+            tbody.appendChild(row);
+        }
 
-                // Add current conversation row
-                filteredData = addCurrentConversationRow(filteredData);
-
-                // Show time logic container after first evaluation
-                showTimeLogicContainer();
-
-                displayCleanedData();
-                const totalRecords = cleanedData.length;
-                const firstLineRecords = filteredData.length - 1; // Subtract 1 for current conversation row
-                showStatus('inputStatus', `Successfully processed ${totalRecords} records using ${detectedFormat}, showing ${firstLineRecords} "First Line" records + Current Conversation (${selectedTimeLogic}h logic)`, 'success');
-
-            } catch (error) {
-                console.error('Error cleaning data:', error);
-                showStatus('inputStatus', 'Error processing data: ' + error.message, 'error');
+        function setDefaultFilters() {
+            // Filter Department to only "First Line"
+            if (tableHeaders.includes('Department')) {
+                activeFilters['Department'] = ['First Line'];
+            }
+            
+            // Set single channel filter based on selection
+            if (tableHeaders.includes('Channel')) {
+                const channelToShow = selectedChannel === 'voice' ? 'Voice' : 'Chat';
+                activeFilters['Channel'] = [channelToShow];
             }
         }
 
-        function displayCleanedData() {
-            const tableBody = document.getElementById('tableBody');
-            const outputTable = document.getElementById('outputTable');
-            const emptyState = document.getElementById('emptyState');
-            const exportButtons = document.querySelectorAll('.btn-export');
+        function filterByChannel(channel) {
+            const voiceBtn = document.getElementById('voiceBtn');
+            const chatBtn = document.getElementById('chatBtn');
             
-            tableBody.innerHTML = '';
+            // Update selected channel (single selection)
+            selectedChannel = channel;
             
-            filteredData.forEach(row => {
-                const tr = document.createElement('tr');
+            // Update button states - only one can be active
+            if (channel === 'voice') {
+                voiceBtn.classList.add('active');
+                chatBtn.classList.remove('active');
+            } else if (channel === 'chat') {
+                chatBtn.classList.add('active');
+                voiceBtn.classList.remove('active');
+            }
+            
+            // Update the channel filter based on selection
+            const channelToShow = selectedChannel === 'voice' ? 'Voice' : 'Chat';
+            activeFilters['Channel'] = [channelToShow];
+            
+            // Update dynamic row based on new selection
+            updateDynamicRow();
+            
+            applyAllFilters();
+        }
+
+        function updateDynamicRow() {
+            const tbody = document.getElementById('tableBody');
+            const dynamicRow = tbody.querySelector('.dynamic-row');
+            
+            if (dynamicRow) {
+                const dynamicRecord = createDynamicRow();
                 
-                // Add special styling for current conversation row
-                if (row.isCurrentConversation) {
-                    tr.className = 'current-conversation';
+                tableHeaders.forEach((header, index) => {
+                    const cell = dynamicRow.children[index];
+                    if (cell && header !== 'Potential Survey') {
+                        cell.textContent = dynamicRecord[header] || '';
+                    }
+                });
+            }
+        }
+
+        function applyAllFilters() {
+            const tbody = document.getElementById('tableBody');
+            const rows = tbody.querySelectorAll('tr:not(.dynamic-row)');
+            
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                const rowIndex = parseInt(row.getAttribute('data-index'));
+                const record = allData[rowIndex];
+                let shouldShow = true;
+                
+                // Check each active filter
+                for (const [header, filterValues] of Object.entries(activeFilters)) {
+                    if (filterValues.length === 0) {
+                        shouldShow = false;
+                        break;
+                        continue;
+                    }
+                    
+                    const cellValue = record[header] || '';
+                    
+                    // Special handling for "Note Initial" containing "19: Chat"
+                    if (header === 'Note Initial') {
+                        const matchesFilter = filterValues.some(filterValue => 
+                            cellValue.includes(filterValue) || filterValue.includes(cellValue)
+                        );
+                        if (!matchesFilter) {
+                            shouldShow = false;
+                            break;
+                        }
+                    } else {
+                        // Exact match for other fields
+                        if (!filterValues.includes(cellValue)) {
+                            shouldShow = false;
+                            break;
+                        }
+                    }
                 }
                 
-                tr.innerHTML = `
-                    <td>${escapeHtml(row.created)}</td>
-                    <td><span class="agent-name">${escapeHtml(row.agent)}</span></td>
-                    <td><span class="location">${escapeHtml(row.location)}</span></td>
-                    <td>${escapeHtml(row.department)}</td>
-                    <td><span class="survey-${row.potentialSurvey.toLowerCase().includes('yes') ? 'yes' : 'no'}">${escapeHtml(row.potentialSurvey)}</span></td>
-                `;
-                tableBody.appendChild(tr);
+                if (shouldShow) {
+                    row.classList.remove('filtered-row');
+                    visibleCount++;
+                } else {
+                    row.classList.add('filtered-row');
+                }
             });
             
-            outputTable.style.display = 'table';
-            emptyState.style.display = 'none';
-            exportButtons.forEach(btn => btn.style.display = 'inline-flex');
+            // Handle dynamic row visibility
+            const dynamicRow = tbody.querySelector('.dynamic-row');
+            if (dynamicRow) {
+                const dynamicRecord = createDynamicRow();
+                let shouldShowDynamic = true;
+                
+                // Check if dynamic row passes filters
+                for (const [header, filterValues] of Object.entries(activeFilters)) {
+                    if (filterValues.length === 0) {
+                        shouldShowDynamic = false;
+                        break;
+                        continue;
+                    }
+                    
+                    const cellValue = dynamicRecord[header] || '';
+                    
+                    if (header === 'Note Initial') {
+                        const matchesFilter = filterValues.some(filterValue => 
+                            cellValue.includes(filterValue) || filterValue.includes(cellValue)
+                        );
+                        if (!matchesFilter) {
+                            shouldShowDynamic = false;
+                            break;
+                        }
+                    } else {
+                        if (!filterValues.includes(cellValue)) {
+                            shouldShowDynamic = false;
+                            break;
+                        }
+                    }
+                }
+                
+                if (shouldShowDynamic) {
+                    dynamicRow.classList.remove('filtered-row');
+                    visibleCount++; // Count dynamic row
+                } else {
+                    dynamicRow.classList.add('filtered-row');
+                }
+            }
             
-            const surveyYesCount = filteredData.filter(row => row.potentialSurvey.includes('Yes')).length;
-            const historicalRecords = filteredData.filter(row => !row.isCurrentConversation).length;
+            // Update survey status for visible rows after filtering
+            updateSurveyStatusForVisibleRows();
             
-            // Update survey warning status indicator
-            updateSurveyWarning();
+            // Update statistics
+            updateFilteredStats(visibleCount);
         }
 
-        function hideTable() {
-            const outputTable = document.getElementById('outputTable');
-            const emptyState = document.getElementById('emptyState');
-            const exportButtons = document.querySelectorAll('.btn-export');
+        function updateFilteredStats(visibleCount) {
+            const statsSection = document.getElementById('statsSection');
+            const totalRecords = allData.length;
+            const isFiltered = visibleCount !== totalRecords + 1; // +1 for dynamic row
             
-            outputTable.style.display = 'none';
-            emptyState.style.display = 'block';
-            exportButtons.forEach(btn => btn.style.display = 'none');
+            // Count active filters
+            const activeFilterCount = Object.keys(activeFilters).filter(key => 
+                activeFilters[key] && activeFilters[key].length > 0
+            ).length;
+            
+            // Count "Yes" surveys in visible rows and get last row survey status
+            const tbody = document.getElementById('tableBody');
+            const visibleRows = tbody.querySelectorAll('tr:not(.filtered-row)');
+            const surveyColumnIndex = tableHeaders.indexOf('Potential Survey');
+            let yesCount = 0;
+            let lastRowSurveyStatus = 'No';
+            
+            if (surveyColumnIndex !== -1) {
+                visibleRows.forEach(row => {
+                    const surveyCell = row.children[surveyColumnIndex];
+                    if (surveyCell && surveyCell.textContent === 'Yes') {
+                        yesCount++;
+                    }
+                });
+                
+                // Get last visible row survey status
+                if (visibleRows.length > 0) {
+                    const lastRow = visibleRows[visibleRows.length - 1];
+                    const lastSurveyCell = lastRow.children[surveyColumnIndex];
+                    if (lastSurveyCell) {
+                        lastRowSurveyStatus = lastSurveyCell.textContent;
+                    }
+                }
+            }
+            
+            const displayCount = visibleCount > 0 ? visibleCount - 1 : 0; // Subtract dynamic row for display
+            
+            // Create survey alert card based on last row status
+            const surveyAlertCard = lastRowSurveyStatus === 'Yes' 
+                ? `<div class="survey-alert-card attention">
+                     <div class="survey-alert-text">⚠️ Attention!! - Survey will be generated</div>
+                   </div>`
+                : `<div class="survey-alert-card">
+                     <div class="survey-alert-text">✅ No Survey will be generated</div>
+                   </div>`;
+            
+            const statsHtml = `
+                <div class="stat-card">
+                    <span class="stat-number">${displayCount}${isFiltered ? `/${totalRecords}` : ''}</span>
+                    <span class="stat-label">${isFiltered ? 'Filtered/Total' : 'Records'}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${tableHeaders.length}</span>
+                    <span class="stat-label">Columns</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${activeFilterCount}</span>
+                    <span class="stat-label">Active Filters</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${yesCount}</span>
+                    <span class="stat-label">Survey Eligible</span>
+                </div>
+                ${surveyAlertCard}
+            `;
+            statsSection.innerHTML = statsHtml;
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        function renderStats(data, headers) {
+            const statsHtml = `
+                <div class="stat-card">
+                    <span class="stat-number">${data.length}</span>
+                    <span class="stat-label">Records</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${headers.length}</span>
+                    <span class="stat-label">Columns</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${Math.round(data.reduce((sum, record) => sum + Object.values(record).join(' ').length, 0) / data.length)}</span>
+                    <span class="stat-label">Avg Length</span>
+                </div>
+            `;
+            document.getElementById('statsSection').innerHTML = statsHtml;
         }
 
-        function exportCSV() {
-            if (filteredData.length === 0) return;
+        function exportData() {
+            if (parsedData.length === 0) {
+                showError('No data to export. Please convert some text first.');
+                return;
+            }
             
-            const headers = ['Created', 'Agent Name', 'Location', 'Department', 'Potential Survey'];
-            let csv = headers.join(',') + '\n';
-            
-            filteredData.forEach(row => {
-                const csvRow = [
-                    `"${row.created}"`,
-                    `"${row.agent}"`,
-                    `"${row.location}"`,
-                    `"${row.department}"`,
-                    `"${row.potentialSurvey}"`
-                ];
-                csv += csvRow.join(',') + '\n';
+            // Get currently visible data for export (excluding dynamic row)
+            const tbody = document.getElementById('tableBody');
+            const visibleRows = tbody.querySelectorAll('tr:not(.filtered-row):not(.dynamic-row)');
+            const filteredData = Array.from(visibleRows).map(row => {
+                const index = parseInt(row.getAttribute('data-index'));
+                return allData[index];
             });
             
-            downloadFile(csv, `first_line_data_${selectedTimeLogic}h.csv`, 'text/csv');
-            showStatus('outputStatus', `CSV file downloaded successfully (${selectedTimeLogic}h logic)`, 'success');
-        }
-
-        function exportJSON() {
-            if (filteredData.length === 0) return;
+            // Add dynamic row data if it's visible
+            const dynamicRow = tbody.querySelector('.dynamic-row:not(.filtered-row)');
+            if (dynamicRow) {
+                const dynamicRecord = createDynamicRow();
+                // Update survey status for dynamic row
+                const surveyColumnIndex = tableHeaders.indexOf('Potential Survey');
+                if (surveyColumnIndex !== -1) {
+                    const surveyCell = dynamicRow.children[surveyColumnIndex];
+                    if (surveyCell) {
+                        dynamicRecord['Potential Survey'] = surveyCell.textContent;
+                    }
+                }
+                filteredData.push(dynamicRecord);
+            }
             
-            const exportData = filteredData.map(row => ({
-                created: row.created,
-                agent: row.agent,
-                location: row.location,
-                department: row.department,
-                potentialSurvey: row.potentialSurvey,
-                timeLogicUsed: selectedTimeLogic + ' hours'
-            }));
+            const jsonOutput = document.getElementById('jsonOutput');
+            const formattedJson = JSON.stringify(filteredData, null, 2);
+            jsonOutput.textContent = formattedJson;
+            jsonOutput.style.display = 'block';
             
-            const json = JSON.stringify(exportData, null, 2);
-            downloadFile(json, `first_line_data_${selectedTimeLogic}h.json`, 'application/json');
-            showStatus('outputStatus', `JSON file downloaded successfully (${selectedTimeLogic}h logic)`, 'success');
-        }
-
-        function downloadFile(content, filename, contentType) {
-            const blob = new Blob([content], { type: contentType });
+            // Also create downloadable file
+            const blob = new Blob([formattedJson], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = filename;
+            a.download = 'converted-data.json';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-        }
-
-        function loadSampleData1() {
-            const sampleData = `181-11104 2025-01-20 11:57 N/A Pending Provider Booking Started Email sent to alexander@eksteds.com Reply type: No-reply
-33 more lines
-564-75269 2025-01-21 14:22 First Line CANCEL 1: Ask about cxnl rules / 1: Cxnl reservation
-19: Chat / 2: Cancellation / refund The order has been canceled: Cancellation Guarantee Reason: Cancellation Guarantee
-28 more lines
-181-11113 2025-01-21 14:23 First Line CXL Conf Cancellation Guarantee 51.A Email sent to alexander@eksteds.com Reply type: No-reply
-23 more lines
-564-75404 2025-01-23 15:40 Second Line 3: Backend / 34: Backend BOM 8: Vol rfd / 4: Already handled
-As per YY Policy refund can be claimed only after departure hence LTD label added
-564-75849 2025-01-31 03:17 First Line 19: Chat / 2: Cancellation / refund 2: Already cxnl / 6: Other
-https://apps.mypurecloud.de/directory/#/engage/admin/interactions/c1fe6bb1-8f12-4d05-8d1e-9694d404eb29 Viktor Alexander Ekstedt pax asking regar`;
             
-            document.getElementById('rawData').value = sampleData;
-            showStatus('inputStatus', 'Sample Format 1 data loaded successfully', 'success');
+            showSuccess(`Data exported successfully! (${filteredData.length} records)`);
         }
 
-        function loadSampleData2() {
-            const sampleData = `2025-09-05 13:27
-Klodian Hasa
-Athens
+        function clearAll() {
+            document.getElementById('textInput').value = '';
+            document.getElementById('outputSection').style.display = 'none';
+            document.getElementById('jsonOutput').style.display = 'none';
+            document.getElementById('channelFilters').style.display = 'none';
+            parsedData = [];
+            tableHeaders = [];
+            activeFilters = {};
+            allData = [];
+            selectedChannel = 'chat'; // Reset to default
+            
+            // Reset channel filter buttons to default (Chat selected)
+            document.getElementById('voiceBtn').classList.remove('active');
+            document.getElementById('chatBtn').classList.add('active');
+        }
+
+        // Load sample data for testing
+        window.onload = function() {
+            const sampleText = `2025-09-08 14:13
+
+Van Khang Vu
+
+CNX Vietnam
 First Line
-1: Phone In / 1: Rebooking
-2: Against Flexible Ticket / 6: Sent to support
-Errand case created and added to queue Customer contact name: Lars Genesys ID: https://apps.mypurecloud.de/directory/#/engage/admin/interactions/f89a996e-7db6-4447-8d2a-94f0ff9a481f
-45 more lines
+19: Chat / 43: No response
+1. Customer not reached / 1: Chat disconnected
 
-2025-09-05 16:10
-Namrata Yadav
-WNS, Pune
+Customer contact name: Philip Lledo Genesys ID: https://apps.mypurecloud.de/directory/#/engage/admin/interactions/99fbb787-c5de-4a4b-839d-bb8f8c5f8e16
+
+2025-09-08 13:48
+
+Vuong Hong Ngoc Pham
+
+CNX Vietnam
 First Line
-Payment link activated
-Note: Tue, 30 Sep - PC1044 Departing: Hamburg (HAM) at 13:50 Arriving: Istanbul Sabiha Gokcen (SAW) at 18:05
-4 more lines
+1: Phone In / 7: Baggage
+2: Baggage claim / 1: Ask customer to send a claim
 
-2025-09-07 09:15
-Maria Rodriguez
-Madrid
-Second Line
-3: Backend / 34: Backend BOM
-8: Vol rfd / 4: Already handled
-As per YY Policy refund can be claimed only after departure hence LTD label added
-12 more lines
+Customer contact name: Philip Lledo Genesys ID: https://apps.mypurecloud.de/directory/#/engage/admin/interactions/a1a0b3fb-af39-4a50-ad6b-16d5f452057c
 
-2025-09-08 14:30
-John Smith
-London
+2025-09-08 12:55
+
+Shaheen Lakdawala
+
+Mumbai
 First Line
-19: Chat / 2: Cancellation / refund
-2: Already cxnl / 6: Other
-Customer requesting refund for cancelled flight. Processing according to policy guidelines.
-8 more lines`;
+32: FL Baggage/Seat Claim / 7: Baggage
+5: Receipt reviewed / 1. No error/No refund
+
+Additional information: ******Working on baggage /Seating Claim *****
+
+2025-09-05 07:19
+
+Parag Thombare
+
+Pune
+First Line
+17: Frontend finalized / 7: Baggage
+2: Baggage claim / 1: Ask customer to send a claim
+
+Removed from queue - As per previous notes pax informed they were offered 2PC checked baggage for the OB.`;
             
-            document.getElementById('rawData').value = sampleData;
-            showStatus('inputStatus', 'Sample Format 2 data loaded successfully', 'success');
-        }
-
-        function clearInput() {
-            document.getElementById('rawData').value = '';
-            document.getElementById('formatIndicator').innerHTML = '';
-            
-            // Show just the current conversation row when input is cleared
-            filteredData = addCurrentConversationRow([]);
-            displayCleanedData();
-            showStatus('inputStatus', `Input cleared - showing current conversation only (${selectedTimeLogic}h logic)`, 'success');
-        }
-
-        function handleTimeLogicChange() {
-            const selectedRadio = document.querySelector('input[name="timeLogic"]:checked');
-            selectedTimeLogic = parseInt(selectedRadio.value);
-            
-            // Update UI elements
-            updateCurrentSetting();
-            updateFilterInfo();
-            
-            // Update active state for time options
-            document.querySelectorAll('.time-option').forEach(option => {
-                option.classList.remove('active');
-            });
-            document.querySelector(`[data-hours="${selectedTimeLogic}"]`).classList.add('active');
-            
-            // If there's data, recalculate and redisplay
-            if (filteredData.length > 0) {
-                // Remove current conversation row, recalculate, then re-add
-                const historicalData = filteredData.filter(row => !row.isCurrentConversation);
-                
-                if (historicalData.length > 0) {
-                    // Recalculate potential survey logic with new time setting
-                    const recalculatedData = calculatePotentialSurvey(historicalData);
-                    filteredData = addCurrentConversationRow(recalculatedData);
-                } else {
-                    // Only current conversation exists
-                    filteredData = addCurrentConversationRow([]);
-                }
-                
-                displayCleanedData();
-                showStatus('inputStatus', `Survey logic updated to ${selectedTimeLogic} hours and data recalculated`, 'success');
-            }
-        }
-
-        // Event listeners
-        document.getElementById('cleanData').addEventListener('click', cleanData);
-        document.getElementById('clearInput').addEventListener('click', clearInput);
-        document.getElementById('sampleData1').addEventListener('click', loadSampleData1);
-        document.getElementById('sampleData2').addEventListener('click', loadSampleData2);
-        document.getElementById('exportCSV').addEventListener('click', exportCSV);
-        document.getElementById('exportJSON').addEventListener('click', exportJSON);
-
-        // Time logic change event listeners
-        document.querySelectorAll('input[name="timeLogic"]').forEach(radio => {
-            radio.addEventListener('change', handleTimeLogicChange);
-        });
-
-        // Add click listeners to time option containers
-        document.querySelectorAll('.time-option').forEach(option => {
-            option.addEventListener('click', function() {
-                const radio = this.querySelector('input[type="radio"]');
-                radio.checked = true;
-                handleTimeLogicChange();
-            });
-        });
-
-        // Allow Enter key to trigger cleaning
-        document.getElementById('rawData').addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'Enter') {
-                cleanData();
-            }
-        });
-
-        // Initialize with current conversation row on page load
-        window.addEventListener('load', function() {
-            updateFilterInfo();
-            updateCurrentSetting();
-            filteredData = addCurrentConversationRow([]);
-            displayCleanedData();
-        });
+            document.getElementById('textInput').value = sampleText;
+        };
     </script>
 </body>
 </html>
