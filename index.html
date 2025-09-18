@@ -444,8 +444,8 @@
                     </div>
 
                     <div class="controls">
-                        <label for="parseMode">Mode:</label>
-                        <select id="parseMode">
+                        <label for="parseMode" style="display: none;">Mode:</label>
+                        <select id="parseMode" style="display: none;">
                             <option value="auto">Auto-detect</option>
                             <option value="structured">Structured Data</option>
                             <option value="tabular">Tabular Format</option>
@@ -454,7 +454,7 @@
 
                         <button class="btn btn-primary" onclick="convertToTable()">Convert</button>
                         <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
-                        <button class="btn btn-success" onclick="exportData()">Export</button>
+                        <button class="btn btn-success" style="display: none;" onclick="exportData()">Export</button>
                     </div>
 
                     <div class="error" id="errorMessage"></div>
